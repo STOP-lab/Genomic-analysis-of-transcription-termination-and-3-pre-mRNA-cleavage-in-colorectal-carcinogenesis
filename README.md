@@ -15,3 +15,4 @@ This repository contains the scripts used for the genomic analyses in the paper 
   - DESeq2 (https://bioconductor.org/packages/release/bioc/html/DESeq2.html)
   - DEXSeq (https://bioconductor.org/packages/release/bioc/html/DEXSeq.html)
   - MACS2 (https://github.com/macs3-project/MACS)
+  - bedGraphToBigWig from [kentUtils](https://github.com/ENCODE-DCC/kentUtils)
