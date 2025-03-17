@@ -18,6 +18,6 @@ This repository contains the scripts used for the genomic analyses in the paper 
 # Separated Protein_Coding Genes
 
 # Please refer to Individual folders for their analysis
-  - ChIP-Seq (ChIP-Seq/ChIP_ReadMe.md)
+  - ChIP-Seq ([ChIP-Seq/ChIP_ReadMe.md](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/ChIP_ReadMe.md))
   - mNET-Seq
   - 3'mRNA-Seq
