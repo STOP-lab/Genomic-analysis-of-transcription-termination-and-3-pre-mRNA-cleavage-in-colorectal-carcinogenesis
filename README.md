@@ -5,4 +5,13 @@ This repository contains the scripts used for the genomic analyses in the paper 
 
 # Required Tools
   - FastQC (https://github.com/s-andrews/FastQC)
-  - 
+  - TrimGalore (https://github.com/FelixKrueger/TrimGalore)
+  - Bowtie2 (https://bowtie-bio.sourceforge.net/bowtie2/index.shtml)
+  - STAR (https://github.com/alexdobin/STAR)
+  - samtools (https://github.com/samtools/samtools)
+  - sambamba (https://github.com/biod/sambamba)
+  - bedtools (https://bedtools.readthedocs.io/en/latest/)
+  - deeptools (https://github.com/deeptools/deepTools)
+  - DESeq2 (https://bioconductor.org/packages/release/bioc/html/DESeq2.html)
+  - DEXSeq (https://bioconductor.org/packages/release/bioc/html/DEXSeq.html)
+  - MACS2 (https://github.com/macs3-project/MACS)
