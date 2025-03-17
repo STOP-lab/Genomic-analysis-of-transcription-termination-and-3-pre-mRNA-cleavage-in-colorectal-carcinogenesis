@@ -1,17 +1,14 @@
 
-##Analysis folder structure
-
+# Analysis folder structure
 mkdir FastQ QC MultiQC Trimmed Aligned Replicates Peaks
 mkdir QC/FastQC QC/TrimmedQC QC/Aligned
 mkdir MultiQC/FastMQC MultiQC/TrimmedMQC MultiQC/AlignedM
 mkdir Aligned/SplitBAM Aligned/Split_BAM/bigWigs
 mkdir Replicates/bigWigs
 
-1. Check the quality of reads with FastQC
-
-fastqc Fastq/*.fq.gz -o QC/FastQC/
-
-multiqc  QC/FastQC/ -n RawData_multiQC -o  MultiQC/FastMQC/
+ - 1. Check the quality of reads with FastQC
+     fastqc Fastq/*.fq.gz -o QC/FastQC/
+     multiqc  QC/FastQC/ -n RawData_multiQC -o  MultiQC/FastMQC/
 
 2. Removal of adapters using TrimGalore
 
