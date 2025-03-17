@@ -5,8 +5,7 @@ library(tidyr)
 
 setwd("/3Prime-Seq/IPF/polyAsites/PAS/PA_counts/CellLineWise_RObjects/1CTvsHCT116/")
 
-### Load and process data 
-#(loops through fwd and rev files and assigns strand information and returns fwd/rev_data as lists because of multiple samples)
+### Loops through fwd and rev files, assigns strand information, and returns fwd/rev_data as lists because of multiple samples
 load_and_process_data <- function(file_pattern) {
   files <- list.files(pattern = file_pattern)
   lapply(files, function(f) {
@@ -28,13 +27,13 @@ combined_data_sorted <- lapply(combined_data, function(gr) {
     sort(gr)
 })
 
-### load the genes of interest
+### Load the genes of interest
 genes <- read.table("/dysk2/groupFolders/deepshika/ColoRectal_Cancer/3Prime-Seq/APA_Analysis/Genes/1CT-major_PAS-SNR-6KbExt-3UTRExtended-AllPAS_Stringent_PCGs-Active.bed", header = TRUE, sep = "\t")
 
-### Convert genes.bed file to Granges object for further downstream analysis 
+### Convert genes file to Granges object for further downstream analysis 
 gr_genes <- makeGRangesFromDataFrame(genes, keep.extra.columns = TRUE)
 
-### Expand gene coordinates to catch PAS downstream of annotated gene ends
+### Expand gene coordinates to catch PAS downstream of annotated gene ends => Use this function if gene coordinates are not already extended by 6Kb
 # My gene list has already extended coordinates
 #expandRange <- function(x, upstream, downstream) {
 #  ranges(x) <- IRanges(
@@ -43,58 +42,43 @@ gr_genes <- makeGRangesFromDataFrame(genes, keep.extra.columns = TRUE)
 #  )
 #  return(x)
 #}
-
 #genes_exp <- expandRange(gr_genes, 0, 6000)
-
-### Assign gene names/symbols from gene list to the genomic coordinates present in combined data
-
+         
+### Assign gene names/symbols from the gene list to the genomic coordinates present in combined data
 assignGeneNames <- function(gr, genes) {
   # Find overlaps between 'gr' and 'genes'
   overlaps <- findOverlaps(gr, genes)
   
-  # Initialize gene_name and gene_symbol columns as NA
-  gr$gene_name <- rep(NA, length(gr))
+  # Initialize gene_id and gene_symbol columns as NA
+  gr$gene_id <- rep(NA, length(gr))
   gr$gene_symbol <- rep(NA, length(gr))
   
-  # Assign both gene_name and gene_symbol based on overlaps
-  gr$gene_name[queryHits(overlaps)] <- genes$gene_name[subjectHits(overlaps)]
+  # Assign both gene_id and gene_symbol based on overlaps
+  gr$gene_id[queryHits(overlaps)] <- genes$gene_id[subjectHits(overlaps)]
   gr$gene_symbol[queryHits(overlaps)] <- genes$gene_symbol[subjectHits(overlaps)]  # Populate gene_symbol
   
   # Create a data frame and filter out entries with missing gene_name
-  df <- as.data.frame(gr) %>% 
-    filter(!is.na(gene_name)) %>% 
-    group_by(gene_name) %>% 
-    mutate(
-      exon_number = paste0(gene_name, ":Exon", sprintf("%03d", row_number())), 
-      featureID = paste0("PAS", row_number())
-    ) %>% 
-    ungroup()
+  df <- as.data.frame(gr) %>% filter(!is.na(gene_id)) %>% group_by(gene_id) %>% mutate(exon_number = paste0(gene_id, ":Exon", sprintf("%03d", row_number())), featureID = paste0("PAS", row_number())) %>% ungroup()
   
-  # Convert back to GRanges object, keeping extra columns including gene_symbol
+  # Convert back to GRanges object to keep extra columns
   result_gr <- makeGRangesFromDataFrame(df, keep.extra.columns = TRUE)
-  
   return(result_gr)
 }
 
-### Assigning geneNames to  combined data and creation of DEXSeq dataset and differential exon usage analysis
+### Assigning gene_ids to combined data and creation of DEXSeq dataset for differential exon usage analysis
 analyze_data <- function(data, genes) {
   annotated_data <- lapply(data, assignGeneNames, genes = genes)
   sum_matrix <- sapply(annotated_data, function(gr) gr$sum)
-
   featureIDs <- annotated_data[[1]]$featureID
   gene_names <- annotated_data[[1]]$gene_name 
   df <- data.frame(sample = as.factor(c("1CT_1", "1CT_2", "1CT_3", "HCT116_2", "HCT116_3", "HCT116_4")), condition = as.factor(c("Control", "Control", "Control", "Tumor", "Tumor", "Tumor")), biolrep = as.factor(c("1", "2", "3", "1", "2", "3")))
-
-  dataset <- DEXSeqDataSet(countData = sum_matrix, sampleData = df, design = ~ sample + exon + condition:exon,
-                           featureID = featureIDs, groupID = gene_names)
-  
+  dataset <- DEXSeqDataSet(countData = sum_matrix, sampleData = df, design = ~ sample + exon + condition:exon, featureID = featureIDs, groupID = gene_ids)
   dataset <- dataset %>% estimateSizeFactors() %>% estimateDispersions() %>% testForDEU() %>% estimateExonFoldChanges(fitExpToVar="condition")
   
   # Save dispersion plot
-  png("/dysk2/groupFolders/deepshika/ColoRectal_Cancer/3Prime-Seq/APA_Analysis/Major_PAS-Annotation/1CTvsHCT116-Dispersion_PCGs-MP1A.png", width=8, height=6, units="in", res=200)
+  png("/dysk2/groupFolders/deepshika/ColoRectal_Cancer/3Prime-Seq/APA_Analysis/Major_PAS-Annotation/1CTvsHCT116-Dispersion_PCGs-MP1A.png", width=8, height=6, units="in")
   plotDispEsts(dataset)
   dev.off()
-  
   dxr <- DEXSeqResults(dataset)
   
   # Save MA plot
@@ -105,16 +89,15 @@ analyze_data <- function(data, genes) {
   # Return both the DEXSeq results and the annotated data
   list(dxr_results = as.data.frame(dxr), annotated_data = annotated_data)
 }
-
 results <- analyze_data(combined_data_sorted, gr_genes)
-
+                       
 ### Access results
 dxr <- results$dxr_results
 
 # Check the structure of columns
 sapply(dxr, is.list)
 
-# Extract certain range of columns as one of the columns(genomicrange) in the dataframe is a list and that doesn't work with write.table function
+# Extract a certain range of columns as one of the columns(genomicrange) in the dataframe is a list and that doesn't work with write.table function
 colnames(dxr)
 dxr1 <- cbind(dxr[,1:10],dxr[,12:17])
 
@@ -125,16 +108,13 @@ gr_ctr$sum <- NULL
 gr_ctr1 <- as.data.frame(gr_ctr)
 dxres <- cbind(dxr1, gr_ctr1[, c(1:5, 7)])
 
-### Check few stats
-length(unique(dxr$groupID))
-table ( tapply( dxr$padj < 0.05, dxr$groupID, any))
-table ( tapply( dxr$padj < 0.05, dxr$groupID, function(x) any(x, na.rm = TRUE)))
-
+#length(unique(dxr$groupID))      
+                       
 ### Save Differential Exon usage results
-write.table(dxres, "/dysk2/groupFolders/deepshika/ColoRectal_Cancer/3Prime-Seq/APA_Analysis/Major_PAS-Annotation/1CTvsHCT116-DEXSeq_results_PCGs-MP1A.txt", sep="\t", quote=FALSE, row.names=FALSE)
+write.table(dxres, "/dysk2/group folders/deepshika/ColoRectal_Cancer/3Prime-Seq/APA_Analysis/Major_PAS-Annotation/1CTvsHCT116-DEXSeq_results_PCGs-MP1A.txt", sep="\t", quote=FALSE, row.names=FALSE)
 dfr1 <- as.data.frame(dxr1)
 
-### Classify the differential exon state as "shift" when a PAS padj < 0.05 orelse "no_shift" 
+### Classify the differential exon state as "shift" when a PAS padj < 0.05 or else "no_shift" 
 group_classification <- tapply(dfr1$padj < 0.05, dfr1$groupID, function(x) if (any(x, na.rm = TRUE)) "shift" else "no_shift")
 dim(group_classification)
 dfr1$state <- group_classification[as.character(dfr1$groupID)]
@@ -147,17 +127,17 @@ nrow(df_temp)
 df2 <- dfr1 %>% group_by(groupID) %>% filter(n() > 1) %>% ungroup() %>% as.data.frame()
 temp <- df2 %>% group_by(groupID, state) %>% summarize(n())
 nrow(temp)
-
 temp %>% group_by(state) %>% summarize(n())
-
-#n_distinct(df2[df2$state == "shift",]$groupID)
-#n_distinct(df2[df2$state == "no_shift",]$groupID)
+                               
+# Gives the number of shift and no_shift
+n_distinct(df2[df2$state == "shift",]$groupID)
+n_distinct(df2[df2$state == "no_shift",]$groupID)
 
 ### Save the shift status to a file
 write.table(temp, "/dysk2/groupFolders/deepshika/ColoRectal_Cancer/3Prime-Seq/APA_Analysis/Major_PAS-Annotation/1CTvsHCT116-diff-APA_Shift_status_PCGs-MP1A.txt", row.names=FALSE, quote=FALSE, sep="\t")
 
 ### APA Analysis
-# First part of analysis: Extract the top 2 PAS and assign its localization based on strand and start
+# First part of the analysis: Extract the top 2 PAS and assign its localization based on the strand and start
 apa_analysis_part1 <- function(df, gr) {
   df %>% filter(state == "shift") %>% mutate(count_sum = rowSums(select(., starts_with("countData.")))) %>%
     group_by(groupID) %>% arrange(padj, desc(count_sum), .by_group = TRUE) %>% slice_head(n = 2) %>%
@@ -170,7 +150,7 @@ apa_analysis_part1 <- function(df, gr) {
     )) %>% ungroup()
 }
 
-# Second part of analysis: calculate ratios and determine direction
+# Second part of the analysis: calculate ratios and determine direction
 apa_analysis_part2 <- function(data) {
   data %>% group_by(groupID) %>% summarize(
       ratio_Tumor = Tumor[localization == "distal"] / Tumor[localization == "proximal"],
@@ -188,5 +168,6 @@ write.table(intermediate_results, "/dysk2/groupFolders/deepshika/ColoRectal_Canc
   
 final_results <- apa_analysis_part2(intermediate_results)
 write.table(final_results, "/dysk2/groupFolders/deepshika/ColoRectal_Cancer/3Prime-Seq/APA_Analysis/Major_PAS-Annotation/1CTvsHCT116-diff-APA_Ratio_PCGs-MP1A.txt", sep="\t", quote=FALSE, row.names=FALSE)
-
+                               
+#Info about the proximal and distal PAS
 final_results %>% group_by(direction) %>% summarize(n = n())
