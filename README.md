@@ -1,6 +1,4 @@
 # Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis
-Uncoupling of transcription termination and 3’ pre-mRNA cleavage and polyadenylation during colorectal cancer progression 
-
 This repository contains the scripts used for the genomic analyses in the paper 'Uncoupling of transcription termination and 3’ pre-mRNA cleavage and polyadenylation during colorectal cancer progression'
 
 # Required Tools
@@ -16,3 +14,10 @@ This repository contains the scripts used for the genomic analyses in the paper 
   - DEXSeq (https://bioconductor.org/packages/release/bioc/html/DEXSeq.html)
   - MACS2 (https://github.com/macs3-project/MACS)
   - bedGraphToBigWig from [kentUtils](https://github.com/ENCODE-DCC/kentUtils)
+
+# Separated Protein_Coding Genes
+
+# Please refer to Individual folders for their analysis
+  - ChIP-Seq
+  - mNET-Seq
+  - 3'mRNA-Seq
