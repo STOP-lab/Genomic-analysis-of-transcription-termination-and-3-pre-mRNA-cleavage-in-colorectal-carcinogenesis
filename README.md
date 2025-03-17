@@ -16,7 +16,8 @@ This repository contains the scripts used for the genomic analyses in the paper 
   - bedGraphToBigWig from [kentUtils](https://github.com/ENCODE-DCC/kentUtils)
     
 # Separated Protein_Coding Genes
-![_- visual selection (1)](https://github.com/user-attachments/assets/a1ebbfc8-9b8e-4f8a-8e42-ae8fa0db2656)
+![_- visual selection (2)](https://github.com/user-attachments/assets/81ee9da1-80a0-4060-9500-4690da6be32b)
+
 # Please refer to Individual folders for their analysis
   - ChIP-Seq ([ChIP-Seq/ChIP_README.md](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/ChIP_README.md))
   - mNET-Seq ([mNET-Seq/mNET_README.md](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/mNET_README.md))
