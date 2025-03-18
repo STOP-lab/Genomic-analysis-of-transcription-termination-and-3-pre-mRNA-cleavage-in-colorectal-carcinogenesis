@@ -1,60 +1,40 @@
-##Analysis folder structure
+# mNET-Seq Analysis
+- mNET-Seq has been performed on Colorectal cells. Please refer to the script for all sample processing [Chip-Seq_processing-Colorectal.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/Chip-Seq_processing-Colorectal.py)
 
-mkdir FastQ QC MultiQC Trimmed Aligned Replicates 
-mkdir QC/FastQC QC/TrimmedQC QC/Aligned
-mkdir MultiQC/FastMQC MultiQC/TrimmedMQC MultiQC/AlignedM
-mkdir Aligned/ReadCounts/
-mkdir Replicates/Merged_ReadCounts/ Replicates/Stranded_BAMs/ Replicates/Stranded_bedGraphs/ Replicates/Stranded_bedGraphs/Normalised_bedGraphs Replicates/Stranded_bedGraphs/SNR/ Replicates/Stranded_bedGraphs/SNR/Normalised_bedGraphs 
+- [Samples_Colorectal.txt](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/Samples_Colorectal.txt) - contains the name of fastq files used to process all samples at once
+# Folder structure
+     mkdir FastQ QC MultiQC Trimmed Aligned Replicates
+     mkdir QC/FastQC QC/TrimmedQC QC/Aligned
+     mkdir Aligned/ReadCounts Replicates/Merged_ReadCounts/ Replicates/Merged-BAMs 
+     mkdir Replicates/Stranded_BAMs/ Replicates/Stranded_bedGraphs/ Replicates/Stranded_bedGraphs/Normalised_bedGraphs
+      mkdir Replicates/Stranded_bedGraphs/SNR/ Replicates/Stranded_bedGraphs/SNR/Normalised_bedGraphs
+# 1. Quality check
+     fastqc Fastq/*.fq.gz -o QC/FastQC/
+# 2. Adapter and low-quality reads removal
+     mv Trimmed/*.zip QC/TrimmedQC/
+     mv Trimmed/*.html QC/TrimmedQC/
+     mv Trimmed/*.txt QC/TrimmedQC/
+- [Chip-Seq_processing-Colorectal.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/Chip-Seq_processing-Colorectal.py)
+# 3. Alignment
+- STAR aligner, human genome (38)
+- Allowing for one alignment to the reference; generation of readCounts[Chip-Seq_processing-HeLa.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/Chip-Seq_processing-HeLa.py)
+# 4. Merge replicates 
+- [MergeRepsnPeakCalling.sh](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/MergeRepsnPeakCalling.sh)
+# 5. Generate strand-specific BAMs
+- Forward Strand reads - 5' to 3' direction
+	-f => includes, -F => excludes; 64 => First in pair (Forward Strand reads - 5' to 3' direction), 128 => Second in pair, 16 => read reverse strand, 144= 128+16
+- Reverse Strand reads - 3' to 5' direction)
+	-f => includes, -F => excludes; 128 => Second in pair (Reverse Strand reads - 3' to 5' direction), 16 => read reverse strand, 80 => First in pair and read reverse strand
 
-1. Check the quality of reads with FastQC
+- [Chip-Seq_processing-Colorectal.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/Chip-Seq_processing-Colorectal.py), [Chip-Seq_processing-HeLa.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/Chip-Seq_processing-HeLa.py)
+# 6. Normalisation of strand specific reads
+ 
+# 7. Extracting the single nucelotide resolution (SNR) 
+- [MergeRepsnPeakCalling.sh](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/MergeRepsnPeakCalling.sh)
+# 8. Normalisation of SNR reads
 
-fastqc FastQ/*.gz -o QC/FastQC/
-
-multiqc  QC/FastQC/ -n RawData_multiQC -o  MultiQC/FastMQC/
-
-2. Removal of adapters using TrimGalore => 1.mNET-Seq_procesing.py
-
-mv Trimmed/*.zip QC/TrimmedQC/
-mv Trimmed/*.html QC/TrimmedQC/
-mv Trimmed/*.txt QC/TrimmedQC/
-
-multiqc QC/TrimmedQC/ -n TrimmedData_multiQC -o  MultiQC/TrimmedMQC/
-
-3. Aligning the mNET-Seq reads to the hg38 reference genome using STAR => 1.mNET-Seq_procesing.py
-
-mv Aligned/STARReadsPerGene.out.tab Aligned/ReadCounts/
-mv Aligned/STARLog.final.out QC/Aligned
-
-multiqc QC/Aligned/ -n Aligned_multiQC -o  MultiQC/AlignedM/
-
-4. Merge replicates of each cell line => 2.Merge_BAMs-Replicates.sh
-
-5. Create strand-specfic BAMs and genome coverage files(bedGraps) => 3.BAM_Reads-split.py
-
-### Forward Strand reads - 5' to 3' direction
-### -f => includes, -F => excludes; 64 => First in pair (Forward Strand reads - 5' to 3' direction), 128 => Second in pair, 16 => read reverse strand, 144= 128+16
-
-### Reverse Strand reads - 3' to 5' direction)
-### -f => includes, -F => excludes; 128 => Second in pair (Reverse Strand reads - 3' to 5' direction), 16 => read reverse strand, 80 => First in pair and read reverse strand
-
-rm Aligned/Stranded_BAMs/*1.bam
-rm Aligned/Stranded_BAMs/*2.bam
-
-6. Full read Normalisation => 4.Normalised_bedGraphs.R
-
-7. Single nucleotide resolution (SNR); Extracting the last transcribed nucleotide => 5.SNR.R
-
-8. SNR_Normalisation => 6.SNR-Normalised_bedGraphs.R
-
-mv Replicates/Stranded_bedGraphs/SNR/*_norm.bedgraph Replicates/Stranded_bedGraphs/SNR/Normalised_bedGraphs/
-
-9. Termination Windows => 7. Termination_Windows.sh
-
-## MACS2 bdgbroadcall fucntion was called upon stranded bedgraph files
-## Reverse strand bedgraph files were multiplied with -1 as the have negative scores and that can interfere in finding the significantly enriched regions
-
-10. For Metaplots and heatmaps, computeMatrix was used in combination with plotProfile/plotHeatmap as per instructions from deepTools web page
-
-
-
-
+# 9. Termination Windows
+- MACS2 bdgbroadcall function was called upon T4ph stranded bedgraphs with default paprameters
+- Reverse strand bedgraph files were multiplied with -1 as the contain negative scores that might interfere in identifying the significantly enriched T4ph regions
+# 10. Metaplots
+- computeMatrix was used in combination with plotProfile as per instructions from the [deepTools](https://github.com/deeptools/deepTools)
