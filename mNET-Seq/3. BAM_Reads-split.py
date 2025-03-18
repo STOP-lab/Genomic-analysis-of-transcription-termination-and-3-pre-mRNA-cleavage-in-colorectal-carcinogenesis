@@ -1,6 +1,6 @@
 #!usr/bin/env python
 import os
-for srr in open("accession_id.txt"):
+for srr in open("Samples_mNET.txt"):
 	sra=srr.strip("\n")
 	
 ## Strand-specific BAMs
