@@ -1,6 +1,6 @@
 # mNET-Seq Analysis
 - mNET-Seq has been performed on Colorectal cells. Please refer to the script for all sample processing [1.mNET-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/1.mNET-Seq_processing.py)
-- [Samples_mNET]([https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/Samples_Colorectal.txt](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/Samples_mNET)) - contains the name of fastq files used to process all samples at once
+- [Samples_mNET](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/Samples_mNET) - contains the name of fastq files used to process all samples at once
 # Folder structure
 	mkdir FastQ QC MultiQC Trimmed Aligned Replicates
 	mkdir QC/FastQC QC/TrimmedQC QC/Aligned
