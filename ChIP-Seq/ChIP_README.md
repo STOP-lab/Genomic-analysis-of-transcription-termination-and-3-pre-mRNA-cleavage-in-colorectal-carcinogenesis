@@ -1,5 +1,6 @@
 # ChIP-Seq Analysis
-- ChIP-Seq has been performed for two different cell lines - Colorectal and Hela. Please refer to the respective cell line script for all sample processing
+- ChIP-Seq has been performed for two different cell lines - Colorectal and Hela. Please refer to the respective script for all sample processing (https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/Chip-Seq_processing-Colorectal.py) 
+
 - contains the name of fastq files used to process all samples at once
 # Folder structure
      mkdir FastQ QC MultiQC Trimmed Aligned Replicates Peaks
