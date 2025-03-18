@@ -16,13 +16,19 @@ ChIP-Seq has been performed for two different cell lines - Colorectal and Hela. 
      bowtie2 --threads 24 -x /home/micgdu/GenomicData/genomicIndices/hsapiens/bowtie2_hg38_mm39/hg38_mm39 -1 Trimmed/1CT_PCF11_rep1_val_1.fq.gz -2 Trimmed/1CT_PCF11_rep1_val_2.fq.gz --no-mixed --no-discordant 2> QC/Aligned/1CT_PCF11_rep1_stats.txt | samtools view -Sbh | samtools sort -t 12 -o Aligned/1CT_PCF11_rep1.bam
      sambamba-1.0.1-linux-amd64-static markdup -t 25 Aligned/1CT_PCF11_rep1.bam Aligned/1CT_PCF11_rep1_markdup.bam
      samtools index -@ 12 -b Aligned/1CT_PCF11_rep1_markdup.bam
-- Colorectal libraries - hybrid genome hg38_mm39; generated with original hg38 fasta file with chromosome naming "chr1", "chr2", "chr3" ... and modified mm39 fasta file with chromosome naming with extra "m" at the front: "mchr1", "mchr2", "mchr3"...
+     
      bowtie2 --threads 24 -x /home/micgdu/GenomicData/genomicIndices/hsapiens/bowtie2/hg38 -1 Trimmed/HeLa_PCF11_siPCF11_val_1.fq.gz -2 Trimmed/HeLa_PCF11_siPCF11_val_2.fq.gz --no-mixed --no-discordant 2>QC/Aligned/HeLa_PCF11_siPCF11_stats.txt | samtools view -Sbh | samtools sort -t 12 -o Aligned/HeLa_PCF11_siPCF11.bam
      sambamba-1.0.1-linux-amd64-static markdup -t 25 Aligned/HeLa_PCF11_siPCF11.bam Aligned/HeLa_PCF11_siPCF11_markdup.bam
      samtools index -@ 12 -b Aligned/HeLa_PCF11_siPCF11_markdup.bam
+- Colorectal libraries - hybrid genome hg38_mm39; generated with original hg38 fasta file with chromosome naming "chr1", "chr2", "chr3" ... and modified mm39 fasta file with chromosome naming with extra "m" at the front: "mchr1", "mchr2", "mchr3"...
 - HeLa libraries - human genome (hg38)
 
-# 4. Separate human (experimental) and mouse (spike-in) aligned reads 
+# 4. Separate human (experimental) and mouse (spike-in) aligned reads
+     samtools view -@ 15 -h Aligned/1CT_PCF11_rep1.bam_markdup.bam | grep -v -f /dysk2/groupFolders/deepshika/GenomicData/Mouse/Mouse_Chr | samtools view -@ 15 -bhS - > Aligned/Split_BAM/1CT_PCF11_rep1-Human.bam
+     samtools index -@ 15 -b Aligned/Split_BAM/1CT_PCF11_rep1-Human.bam
+     
+     samtools view -@ 15 -h Aligned/1CT_PCF11_rep1_markdup.bam | grep -f /dysk2/groupFolders/deepshika/GenomicData/Mouse/Mouse_Chr | samtools view -@ 15 -bhS - > Aligned/Split_BAM/1CT_PCF11_rep1-Mouse.bam
+     samtools index -@ 15 -b Aligned/Split_BAM/1CT_PCF11_rep1-Mouse.bam
 - Mouse_Chr - contains the modified mouse chromosome names: "mchr1", "mchr2", "mchr3"... (see Mouse_Chr) which makes it easier to separate the human and mouse-aligned reads
 # 5. Genome coverage files (BAM to bigWig Conversion)
      bamCoverage -b Aligned/Split_BAM/1CT_PCF11_rep1-Human.bam --binSize 50 --normalizeUsing CPM -p 18 -o Aligned/Split_BAM/bigWigs/1CT_PCF11_rep1-Human.bw
