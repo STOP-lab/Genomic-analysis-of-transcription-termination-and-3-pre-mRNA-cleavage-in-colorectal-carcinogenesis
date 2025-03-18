@@ -1,5 +1,5 @@
 # mNET-Seq Analysis
-- mNET-Seq has been performed on Colorectal cells. Please refer to the script for all sample processing [Chip-Seq_processing-Colorectal.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/Chip-Seq_processing-Colorectal.py)
+- mNET-Seq has been performed on Colorectal cells. Please refer to the script for all sample processing [1.%20mNET-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/1.%20mNET-Seq_processing.py)
 
 - [Samples_Colorectal.txt](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/Samples_Colorectal.txt) - contains the name of fastq files used to process all samples at once
 # Folder structure
