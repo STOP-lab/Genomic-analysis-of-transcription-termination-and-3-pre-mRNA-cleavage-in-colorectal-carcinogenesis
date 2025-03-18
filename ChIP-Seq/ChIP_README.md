@@ -13,11 +13,12 @@ ChIP-Seq has been performed for two different cell lines - Colorectal and Hela. 
      mv Trimmed/*.html QC/TrimmedQC/
      mv Trimmed/*.txt QC/TrimmedQC/
 # 3. Alignment
-- Colorectal libraries - hybrid genome hg38_mm39; generated with original hg38 fasta file with chromosome naming "chr1", "chr2", "chr3" ... and modified mm39 fasta file with chromosome naming with extra "m" at the front: "mchr1", "mchr2", "mchr3"...
-- HeLa libraries - human genome (hg38)
-     bowtie2 --threads 24 -x /home/micgdu/GenomicData/genomicIndices/hsapiens/bowtie2_hg38_mm39/hg38_mm39 -1 Trimmed/1CT_PCF11_rep1_val_1.fq.gz -2 Trimmed/1CT_PCF11_rep1_val_2.fq.gz --no-mixed --no-discordant 2> QC/Aligned/1CT_PCF11_rep1_stats.txt |      samtools view -Sbh | samtools sort -t 12 -o Aligned/1CT_PCF11_rep1.bam
+     bowtie2 --threads 24 -x /home/micgdu/GenomicData/genomicIndices/hsapiens/bowtie2_hg38_mm39/hg38_mm39 -1 Trimmed/1CT_PCF11_rep1_val_1.fq.gz -2 Trimmed/1CT_PCF11_rep1_val_2.fq.gz --no-mixed --no-discordant 2> QC/Aligned/1CT_PCF11_rep1_stats.txt | samtools view -Sbh | samtools sort -t 12 -o Aligned/1CT_PCF11_rep1.bam
      sambamba-1.0.1-linux-amd64-static markdup -t 25 Aligned/1CT_PCF11_rep1.bam Aligned/1CT_PCF11_rep1_markdup.bam
      samtools index -@ 12 -b Aligned/1CT_PCF11_rep1_markdup.bam
+- Colorectal libraries - hybrid genome hg38_mm39; generated with original hg38 fasta file with chromosome naming "chr1", "chr2", "chr3" ... and modified mm39 fasta file with chromosome naming with extra "m" at the front: "mchr1", "mchr2", "mchr3"...
+- HeLa libraries - human genome (hg38)
+
 # 4. Separate human (experimental) and mouse (spike-in) aligned reads 
 - Mouse_Chr - contains the modified mouse chromosome names: "mchr1", "mchr2", "mchr3"... (see Mouse_Chr) which makes it easier to separate the human and mouse-aligned reads
 # 5. Genome coverage files (BAM to bigWig Conversion)
