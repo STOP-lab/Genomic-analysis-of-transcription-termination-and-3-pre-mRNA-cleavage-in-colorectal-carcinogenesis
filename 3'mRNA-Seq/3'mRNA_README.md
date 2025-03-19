@@ -19,16 +19,16 @@ bcl2fastq -R 231030_A01680_0155_AHMN5MDRX3/ -o 231030_A01680_0155_AHMN5MDRX3/3Pr
 fastqc 3Prime-Seq/FastQ/*.gz -o 3Prime-Seq/QC/FastQC/
 ```
 # 3. Adapter, low-quality reads, and PolyA/T_tails removal
+ - [1.3Prime-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/1.3Prime-Seq_processing.py)
+ - Move the trimmed reports to the quality check reports to main the folder structure
 ```	
- mv Trimmed/*.zip QC/TrimmedQC/
+mv Trimmed/*.zip QC/TrimmedQC/
 mv Trimmed/*.html QC/TrimmedQC/
 mv Trimmed/*.txt QC/TrimmedQC/
 mv Trimmed/*.zip QC/TrimmedQC/PolyA-T
 mv Trimmed/*.html QC/TrimmedQC/PolyA-T
 mv Trimmed/*.txt QC/TrimmedQC/PolyA-T
 ```
- - Move the trimmed reports to the quality check reports to main the folder structure
- - [1.3Prime-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/1.3Prime-Seq_processing.py)
 # 4. Alignment 
  - STAR aligner, human genome (hg38)
  - Parameters for STAR alignment were adapted from lexogen (https://github.com/Lexogen-Tools/quantseqpool_analysis) along with the generation of read counts
