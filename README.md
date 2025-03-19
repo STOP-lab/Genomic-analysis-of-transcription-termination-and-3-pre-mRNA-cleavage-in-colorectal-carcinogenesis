@@ -16,6 +16,6 @@ This repository contains the scripts used for the genomic analyses in the paper 
 # Gene Set - Separated Active Protein Coding Genes
 ![_- visual selection (4)](https://github.com/user-attachments/assets/f4cec5f3-c425-4cfb-b0b2-63655cfb472a)
 # Please check the individual folders for their analysis description
-  - ChIP-Seq ([ChIP-Seq/ChIP_README.md](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/ChIP_README.md))
-  - mNET-Seq ([mNET-Seq/mNET_README.md](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/mNET_README.md))
-  - 3'mRNA-Seq ([3'mRNA-Seq/3'mRNA_README.md](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/3'mRNA_README.md))
+  - ChIP-Seq ([ChIP_README.md](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/ChIP_README.md))
+  - mNET-Seq ([mNET_README.md](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/mNET_README.md))
+  - 3'mRNA-Seq ([3'mRNA_README.md](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/3'mRNA_README.md))
