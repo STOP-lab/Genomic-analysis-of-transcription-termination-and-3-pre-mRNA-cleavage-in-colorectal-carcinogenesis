@@ -1,5 +1,5 @@
 # 3'mRNA-Seq Analysis
-- mNET-Seq has been performed on Colorectal cells. Please refer to the script for all sample processing [1.3Prime-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/1.3Prime-Seq_processing.py)
+- 3'mRNA-Seq has been performed on Colorectal cells. Please refer to the script for all sample processing [1.3Prime-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/1.3Prime-Seq_processing.py)
 - [Samples_3'mRNA](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/Samples_3'mRNA) - contains the name of fastq files used to process all samples at once
 # Folder structure for analysis
 ```
