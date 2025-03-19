@@ -38,13 +38,14 @@
 ```
 mv 3Prime-Seq/Aligned/Stranded_bedGraphs/*.bedGraph 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/
 mv 3Prime-Seq/Aligned/Stranded_bedGraphs/*.bedGraph 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/
+```
 - Sort normalised bedgraphs and generate bigWigs
 ```
 for f in 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/*.bedGraph; do sort -k1,1 -k2,2n "$f" -o "$f"; done
 for f in 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/*.bedGraph; do /home/micgdu/kentutils/bedGraphToBigWig "$f" hg38_chromsizes.genome "$f.bw"; done
 for f in 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/*.bw; do mv "$f" "$(echo "$f" | sed s/.bedGraph.bw/.bw/g)"; done
 mv 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/*.bw 3Prime-Seq/Aligned/Stranded_bigWigs/
-
+```
 6. Filtering Internal Primming Events => InternalPrimming_Mask.sh; InternalPrimming_Filtering.R
 
 for f in 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/*.bedGraph; do sort -k1,1 -k2,2n "$f" -o "$f"; done
