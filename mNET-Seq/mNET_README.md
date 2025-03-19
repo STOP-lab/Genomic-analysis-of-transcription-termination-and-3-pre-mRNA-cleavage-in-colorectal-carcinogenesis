@@ -16,8 +16,8 @@
 - [1.mNET-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/1.mNET-Seq_processing.py)
 # 3. Alignment
 - STAR aligner, human genome (38)
-- Allowing for one alignment to the reference; generation of readCounts
-- [1.mNET-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/1.mNET-Seq_processing.py
+- Allowing for one alignment to the reference; generation of read counts
+- [1.mNET-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/1.mNET-Seq_processing.py)
 # 4. Merge replicates 
 - [2.Merge_BAMs-Replicates.sh](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/2.Merge_BAMs-Replicates.sh)
 # 5. Generate strand-specific BAMs
@@ -26,20 +26,20 @@
 - Reverse Strand reads - 3' to 5' direction)
 	-f => includes, -F => excludes; 128 => Second in pair (Reverse Strand reads - 3' to 5' direction), 16 => read reverse strand, 80 => First in pair and read reverse strand
 - [3.BAM_Reads-split.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/3.BAM_Reads-split.py)
-# 6. Normalisation of strand specific reads
+# 6. Normalisation of strand-specific reads
 - Estimates size factors in Deseq2 and normalisation factors (per million factors)
 - Generates normalised bedgraphs for full read
 - [4.Normalised_bedGraphs.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/4.Normalised_bedGraphs.R)
-# 7. Extracting the single nucelotide resolution (SNR)
-- Extracts the last transcribed nucleotide from a read, that is the last position of read
+# 7. Extracting the single nucleotide resolution (SNR)
+- Extracts the last transcribed nucleotide from a read, that is the last position of the read
 - [5.SNR.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/5.SNR.R)
 # 8. Normalisation of SNR reads
 - Estimates size factors in Deseq2 and normalisation factors (per million factors)
-- Generates normalised bedgraphs for single nucleotide resoultion reads
+- Generates normalised bedgraphs for single nucleotide resolution reads
 - [6.SNR-Normalised_bedGraphs.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/6.SNR-Normalised_bedGraphs.R)
 # 9. Termination Windows
 - MACS2 bdgbroadcall function was called upon T4ph stranded bedgraphs with default paprameters
-- Reverse strand bedgraph files were multiplied with -1 as the contain negative scores and that might interfere in identifying the significantly enriched T4ph regions
+- Reverse strand bedgraph files were multiplied with -1 as they contain negative scores and that might interfere in identifying the significantly enriched T4ph regions
 - [7.Termination_Windows.sh](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/7.Termination_Windows.sh)
 # 10. Metaplots
 - computeMatrix was used in combination with plotProfile as per instructions from the [deepTools](https://github.com/deeptools/deepTools)
