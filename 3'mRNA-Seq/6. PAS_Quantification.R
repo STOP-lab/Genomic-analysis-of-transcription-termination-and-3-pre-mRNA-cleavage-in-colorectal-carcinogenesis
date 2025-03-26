@@ -4,13 +4,13 @@ library(GenomicAlignments)
 library(rtracklayer)
 library(BSgenome.Hsapiens.UCSC.hg38)
 
-Fwd_apa<-read.table("/dysk2/groupFolders/deepshika/ColoRectal_Cancer/3Prime-Seq/IPF/polyAsites/PAS/APA_Resources/PAS_local_max2_Fwd.bed", header=FALSE, stringsAsFactors=FALSE)
-Rev_apa<-read.table("/dysk2/groupFolders/deepshika/ColoRectal_Cancer/3Prime-Seq/IPF/polyAsites/PAS/APA_Resources/PAS_local_max2_Rev.bed", header=FALSE, stringsAsFactors=FALSE)
+Fwd_apa<-read.table("3Prime-Seq/IPF/polyAsites/PAS/APA_Resources/PAS_local_max2_Fwd.bed", header=FALSE, stringsAsFactors=FALSE)
+Rev_apa<-read.table("3Prime-Seq/IPF/polyAsites/PAS/APA_Resources/PAS_local_max2_Rev.bed", header=FALSE, stringsAsFactors=FALSE)
 
 Fwd_apaG<-GRanges(Fwd_apa[,1],IRanges(Fwd_apa[,2], Fwd_apa[,3]))
 Rev_apaG<-GRanges(Rev_apa[,1],IRanges(Rev_apa[,2], Rev_apa[,3]))
 
-setwd("/dysk2/groupFolders/deepshika/ColoRectal_Cancer/3Prime-Seq/IPF/polyAsites/PAS/Raw_PAS/")
+setwd("3Prime-Seq/IPF/polyAsites/PAS/Raw_PAS/")
 
 FwdPAgr<-list.files(pattern="bam_raw_PAS_Fwd.RData")  ## lists only PAs, not control files
 RevPAgr<-list.files(pattern="bam_raw_PAS_Rev.RData")
@@ -72,8 +72,8 @@ ApaQuant <- function(i) {
     binsBdgRdf[,7] <- -binsBdgRdf[,6] / (length(R) / 1e6) # Normalize to RPM and negate
 
     # Write results to bedGraph files
-    write.table(binsBdgFdf[,c(1:3,7)], file=paste("/dysk2/groupFolders/deepshika/ColoRectal_Cancer/3Prime-Seq/IPF/polyAsites/PAS/PA_counts/", FwdPAgr[i], "_FwdApaCounts_rpmC.bedGraph", sep=""), quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
-    write.table(binsBdgRdf[,c(1:3,7)], file=paste("/dysk2/groupFolders/deepshika/ColoRectal_Cancer/3Prime-Seq/IPF/polyAsites/PAS/PA_counts/", RevPAgr[i], "_RevApaCounts_rpmC.bedGraph", sep=""), quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
+    write.table(binsBdgFdf[,c(1:3,7)], file=paste("3Prime-Seq/IPF/polyAsites/PAS/PA_counts/", FwdPAgr[i], "_FwdApaCounts_rpmC.bedGraph", sep=""), quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
+    write.table(binsBdgRdf[,c(1:3,7)], file=paste("3Prime-Seq/IPF/polyAsites/PAS/PA_counts/", RevPAgr[i], "_RevApaCounts_rpmC.bedGraph", sep=""), quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
 }
 
 # Run the function for each index within the valid range
