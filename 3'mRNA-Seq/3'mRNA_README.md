@@ -5,8 +5,11 @@
 ```
 mkdir 3Prime-Seq/FastQ 3Prime-Seq/QC 3Prime-Seq/Trimmed 3Prime-Seq/Trimmed/PolyA-T/ 3Prime-Seq/Aligned mkdir 3Prime-Seq/Aligned/ReadCounts/
 mkdir 3Prime-Seq/QC/FastQC 3Prime-Seq/QC/TrimmedQC 3Prime-Seq/QC/TrimmedQC/PolyA-T 3Prime-Seq/QC/Aligned
-mkdir 3Prime-Seq/Replicates 3Prime-Seq/Aligned/Stranded_BAMs/ 3Prime-Seq/Aligned/Stranded_bedGraphs/ 
-mkdir 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs 3Prime-Seq/Aligned/Stranded_bigWigs
+mkdir 3Prime-Seq/Replicates 3Prime-Seq/Aligned/Stranded_BAMs/ 3Prime-Seq/Aligned/Stranded_bedGraphs/
+mkdir 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/ 3Prime-Seq/Aligned/Stranded_bigWigs/
+mkdir 3Prime-Seq/IPF 3Prime-Seq/Aligned/IPF/PolyAsites 3Prime-Seq/IPF/PAS 3Prime-Seq/IPF/Raw_PAS
+mkdir 3Prime-Seq/IPF/PAs_counts 3Prime-Seq/APA-Analysis
+mkdir 
 ```  
 # 1. DeMultiplexing and FastQ format conversion
 - Raw .cbcl files to fastq conversion and demultiplexing  was done using custom-created SampleSheet
@@ -54,37 +57,48 @@ for f in 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/*.bedGraph; 
 for f in 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/*.bw; do mv "$f" "$(echo "$f" | sed s/.bedGraph.bw/.bw/g)"; done
 mv 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/*.bw 3Prime-Seq/Aligned/Stranded_bigWigs/
 ```
-6. Filtering Internal Primming Events => InternalPrimming_Mask.sh; InternalPrimming_Filtering.R
+# 7. Filtering Internal Priming Events
+- Uses two scripts [3.InternalPrimming_Mask.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/3.InternalPrimming_Mask.R); [4.InternalPrimming_Filtering.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/4.InternalPrimming_Filtering.R)
+- [3.InternalPrimming_Mask.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/3.InternalPrimming_Mask.R) : Generates the genomic mask that includes consecutive 6A's/T's and or >6A/T in a 10 nucleotide window excluding the gene 3'ends and validates experimental polyadenylation sites
+- [4.InternalPrimming_Filtering.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/4.InternalPriming_Filtering.R) - Script used to filter out the internal priming reads from the strand-specific bams based on the crude genomic mask generated
 
-for f in 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/*.bedGraph; do sort -k1,1 -k2,2n "$f" -o "$f"; done
-
-for f in 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/*.bedGraph; do /home/micgdu/kentutils/bedGraphToBigWig "$f" hg38_chromsizes.genome "$f.bw"; done
-
-for f in 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/*.bw; do mv "$f" "$(echo "$f" | sed s/.bedGraph.bw/.bw/g)"; done
-
-mv 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/*.bw 3Prime-Seq/Aligned/Stranded_bigWigs/
-
-7. Polyadenylation site (PAS) Detection and Quantification => PAS_Calling.R; PAS_Quantification.R
-
-######################## Renaming and relocating files after PAS Quantification ########################
+# 8. Polyadenylation site (PAS) Detection and Quantification
+- [5.PAS_Calling.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/5.PAS_Calling.R)
+  Generate density profiles: Strand-specific, depth-normalized 3’ mRNA-seq coverage profiles were created for each strand across the genome
+- [6.PAS_Quantification.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/6.PAS_Quantification.R)
+- Identifying PAS: A sliding 30-nucleotide window summed signal values, selecting windows above a threshold (30)
+                   The strongest peak within each window was identified, and overlapping regions were removed to refine PAS detection
+                   The detected PAS were used to extract sample-specific polyadenylation sites
+  
+- Rename and relocate files after PAS Quantification
+```
 for f in IPF/polyAsites/PAS/PA_counts/*.bedGraph; do mv "$f" "$(echo "$f" | sed s/_Fwd.bam_raw_PAS_Fwd.RData_/_raw_PAS_/)"; done
 for f in IPF/polyAsites/PAS/PA_counts/*.bedGraph; do mv "$f" "$(echo "$f" | sed s/_Rev.bam_raw_PAS_Rev.RData_/_raw_PAS_/)"; done
 for f in IPF/polyAsites/PAS/PA_counts/*FwdApa.RData; do mv "$f" "$(echo "$f" | sed s/_Fwd.bam_raw_PAS_Fwd.RData_/_raw_PAS_/)"; done
 for f in IPF/polyAsites/PAS/PA_counts/*RevApa.RData; do mv "$f" "$(echo "$f" | sed s/_Rev.bam_raw_PAS_Rev.RData_/_raw_PAS_/)"; done
 
 mv IPF/polyAsites/PAS/PA_counts/*.bedGraph IPF/polyAsites/PAS/PA_counts/bedGraphs/
-
-######### Sorting the bedgraphs and converting them to bigWigs
+```
+- Sort the bedgraphs and convert them to bigWigs
+```
 for f in IPF/polyAsites/PAS/PA_counts/bedGraphs/*.bedGraph ; do sort -k1,1 -k2,2n "$f" -o "$f"; done
 for f in IPF/polyAsites/PAS/PA_counts/bedGraphs/* ; do /home/micgdu/kentutils/bedGraphToBigWig "$f" /dysk2/groupFolders/deepshika/GenomicData/hg38_chromsizes.genome "$f.bw" ; done
 mv IPF/polyAsites/PAS/PA_counts/bedGraphs/*.bw IPF/polyAsites/PAS/PA_counts/bigWigs/
 for f in IPF/polyAsites/PAS/PA_counts/bigWigs/*.bw; do mv "$f" "$(echo "$f" | sed s/.bedGraph//)"; done
+```
+# 9. Alternative PolyAdenylation (APA) analysis
+- [7.APA.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/7.APA.R)
+- APA Analysis with DEXSeq: Differential PAS usage was quantified using DEXSeq. Only active protein-coding genes (n=8629), non-overlapping on the same strand and isolated by 6kb, were analyzed
+- Gene coordinates were extended 6kb downstream of the 3’ end to capture PAS beyond annotated gene ends
+- Classification of APA Shifts: (DEXSeq provides log2 fold change and adjusted p-values for each PAS)
+  Genes with no significant PAS change (padj ≥ 0.05) were labeled "APA no shift."
+  The two most differentially used PAS were compared for genes with multiple significant PAS (padj < 0.05)
+  If the distal-to-proximal PAS ratio was higher in experimental samples, the shift was distal; otherwise, it was proximal
+  
+# 10. Merge replicates of each cell line
+- [8.Merge_Replicates.sh](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/8.Merge_Replicates.sh)
 
-8. Alternative PolyAdenylation (APA) analysis => APA.R
 
-9. Merge replicates of each cell line => Merge_BAMs-Replicates.sh
-
-10. For Metaplots and heatmaps, computeMatrix was used in combination with plotProfile/plotHeatmap as per instructions from deepTools web page
 
 
 
