@@ -6,23 +6,21 @@ library(BSgenome.Hsapiens.UCSC.hg38)
 
 setwd <- ("3Prime-Seq/Aligned/Stranded_BAMs/")
 
-### loading internal priming mask with regions with >= 6 consectutive As/Ts, >6 A/Ts in 10 nt window with
-### exceptions of 3' gene ends (GENCODE) and experimentally detected APAs (Dirty et al. 2012)
+### Load internal primming mask: >= 6 consectutive As/Ts, >6 A/Ts in 10 nt window with exceptions of 3' gene ends (GENCODE) and experimentally detected APAs (Dirty et al. 2012)
 
-load("/home/micgdu/Analysis/Kinga/3endQuantSec/IntPrFilter/A_mask4.RData")
-load("/home/micgdu/Analysis/Kinga/3endQuantSec/IntPrFilter/T_mask4.RData")
+load("3Prime-Seq/IPF/A_mask4.RData")
+load("3Prime-Seq/IPF/T_mask4.RData")
 
 # listing stranded Fwd/Rev bam files with alignments
 Fwd<-list.files(path="3Prime-Seq/Aligned/Stranded_BAMs/", pattern="Fwd", full.names = FALSE)  
 Rev<-list.files(path="3Prime-Seq/Aligned/Stranded_BAMs/", pattern="Rev", full.names = FALSE)
 
 # terminator function:
-# - extends 3'ends that represent PAs by 10 ntds
-# - detects the reads that overlap (min 5 nt) with potential internal priming regions from the mask
-# - retrieves non-overlapping reads => genuine PAs
-# - uses functions "PAs_catcher_Fwd" & "PAs_catcher_Rev"
-# - for responsive starnded bam files they retrieve: 1.) PAs 2.) PAs coverage 3.) normalised bedgraph (rpm)
-# - finally all three types of files are generted for 1.) PAs 2.) filtered out signal (control of the process; may be used as quality control?)
+# - Extends 3'ends that represent PAs by 10 ntds
+# - Detects the reads that overlap (min 5 nt) with potential internal priming regions from the mask
+# - Retrieves non-overlapping reads, i.e., genuine PAs
+# - Uses functions "PAs_catcher_Fwd" & "PAs_catcher_Rev" and for each stranded bam files gnerates: 1.) PAs 2.) PAs coverage 3.) normalised bedgraph (rpm)
+# - All three types of files are generated for 1.) PAs 2.) Filtered-out signal (Can be used as quality/internal control)
 
 terminator<- function(i){
 
