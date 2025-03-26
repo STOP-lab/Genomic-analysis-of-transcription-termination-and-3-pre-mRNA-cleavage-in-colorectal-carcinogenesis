@@ -93,10 +93,10 @@ for (i in 1:length(RevPile30r)) {
 }
 save(RevGlist,file="PAS_max1_Rev.RData")
 
-### finding local maxima round 2
-# create reduced GRanges object from list of 30nt windows centered ta the local max PAS signal
-# overlap its intervals with all coverage intervals with signal >30 (cov from 36 samples)
-# find maximum & make 30 nt window around it
+### Find local maxima round 2
+# Create reduced GRanges object from list of 30nt windows centered at the local max PAS signal
+# Overlap its intervals with all coverage intervals with signal >30 (cov from 36 samples)
+# Find maximum & make 30 nt window around it
 
 FwdG1<-do.call("c", FwdGlist)
 FwdG1r<-reduce(FwdG1)
@@ -129,5 +129,3 @@ write.table(FwdG2Df[,1:3] ,file="PAS_local_max2_Fwd.bed" ,quote=FALSE,sep="\t",r
 RevG2<-do.call("c", RevGlist2)
 RevG2Df<-as.data.frame(RevG2)
 write.table(RevG2Df[,1:3] ,file="PAS_local_max2_Rev.bed" ,quote=FALSE,sep="\t",row.names=FALSE, col.names=FALSE)
-
-
