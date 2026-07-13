@@ -1,6 +1,6 @@
 #!usr/bin/env python
 import os
-for srr in open("accession_id.txt"):
+for srr in open("Samples_3mRNA.txt"):
 	sra=srr.strip("\n")
 
 ### Adapter and PolyA/T_tail trimming using TrimGalore
