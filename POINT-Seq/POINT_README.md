@@ -33,17 +33,14 @@
 - - f 99: R1 mapped to the forward strand and - f 147 : R2 mapped to the reverse strand (-f => includes, -F => excludes)
 - [3.Strand-Specific_BAMs.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/3.BAM_Reads-split.py)
 # Remove intermediate BAM files
-  	rm Replicates/Merged_BAMs/Stranded_BAMs/*1.bam
-  	rm Replicates/Merged_BAMs/Stranded_BAMs/*2.bam
+	rm Replicates/Merged_BAMs/Stranded_BAMs/*1.bam
+	rm Replicates/Merged_BAMs/Stranded_BAMs/*2.bam
 
 # 6. Normalisation of strand-specific reads
 # Merge the read counts of replicates before normalisation
-  	 paste ReadCounts/SW480_DMSO_rep3-STARReadsPerGene.out.tab ReadCounts/SW480_DMSO_rep4-STARReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/SW480_DMSO-STARReadsPerGene.out.tab
-
+	paste ReadCounts/SW480_DMSO_rep3-STARReadsPerGene.out.tab ReadCounts/SW480_DMSO_rep4-STARReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/SW480_DMSO-STARReadsPerGene.out.tab
 	paste ReadCounts/SW480_JTE_rep3-STARReadsPerGene.out.tab ReadCounts/SW480_JTE_rep4-STARReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/SW480_JTE-STARReadsPerGene.out.tab
-
 	paste ReadCounts/SW620_DMSO_rep3-STARReadsPerGene.out.tab ReadCounts/SW620_DMSO_rep4-STARReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/SW620_DMSO-STARReadsPerGene.out.tab
-
 	paste ReadCounts/SW620_JTE_rep3-STARReadsPerGene.out.tab ReadCounts/SW620_JTE_rep4-STARReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/SW620_JTE-STARReadsPerGene.out.tab
 
 - Estimates size factors in Deseq2 and normalisation factors (per million factors)
