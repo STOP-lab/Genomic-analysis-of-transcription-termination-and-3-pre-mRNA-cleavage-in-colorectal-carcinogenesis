@@ -1,4 +1,4 @@
-# Genomic-analysis-of-nascent-transcription-,-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis
+# Genomic-analysis-of-nascent-transcription,transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis
 This repository contains the scripts used for the genomic analyses in the paper 'Proximity of pre-mRNA 3′ end processing and transcription termination is associated with enhanced gene expression'
 # Required Tools
   - FastQC (https://github.com/s-andrews/FastQC)
