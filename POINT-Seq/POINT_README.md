@@ -11,11 +11,12 @@
 
 # 1. Quality check
      fastqc Fastq/*.fq.gz -o QC/FastQC/
+# Raw FASTQ stats
 	 multiqc QC/FastQC/* -o MultiQC/ -n Raw_multiqc
 	 
 # 2. Adapter and low-quality reads removal
 [1.POINT-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/1.POINT-Seq_processing.py)
-# Move files to the respective folders
+# Trimmed FASTQ stats
 	mv Trimmed/*.zip QC/TrimmedQC/
 	mv Trimmed/*.html QC/TrimmedQC/
 	mv Trimmed/*.txt QC/TrimmedQC/
