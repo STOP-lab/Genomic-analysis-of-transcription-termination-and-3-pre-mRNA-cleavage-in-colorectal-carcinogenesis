@@ -18,7 +18,7 @@ library(GenomicAlignments)
 library("rtracklayer")
 library(BSgenome.Hsapiens.UCSC.hg19)
 
-setwd("3Prime-Seq/IPF/PolyAsites/")
+setwd("IPF/PolyAsites/")
 
 files<- list.files()
 
@@ -93,8 +93,8 @@ library(GenomicAlignments)
 library(rtracklayer)
 library(BSgenome.Hsapiens.UCSC.hg38) 
 
-setwd("3Prime-Seq/IPF/")
-genes<-read.table("/dysk2/groupFolders/deepshika/GenomicData/Basic_Isoform/gencode.v43.basic-Isoform_GeneIds.bed",header=FALSE,stringsAsFactors=FALSE)
+setwd("IPF/")
+genes<-read.table("gencode.v43.basic-Isoform_GeneIds.bed",header=FALSE,stringsAsFactors=FALSE)
 
 # 1) Generate 20bp widows around 3'end of each gene
 genesG<-GRanges(genes$V1,IRanges(genes$V2,genes$V3), strand=genes$V6)
@@ -186,8 +186,8 @@ write.table(T_10Df[,1:3] ,file="T_10.bed",quote=FALSE,sep="\t",row.names=FALSE, 
 write.table(A_maskDf[,1:3] ,file="A_mask.bed",quote=FALSE,sep="\t",row.names=FALSE, col.names=FALSE)
 write.table(T_maskDf[,1:3] ,file="T_mask.bed",quote=FALSE,sep="\t",row.names=FALSE, col.names=FALSE)
 
-load("3Prime-Seq/IPF/PolyAsites/FwdTSEr_hg38.RData")
-load("3Prime-Seq/IPF/PolyAsites/RwdTSEr_hg38.RData")
+load("IPF/PolyAsites/FwdTSEr_hg38.RData")
+load("IPF/PolyAsites/RwdTSEr_hg38.RData")
 
 FwdTSEr<-FwdTSEr_hg38
 RwdTSEr<-RwdTSEr_hg38
