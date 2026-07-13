@@ -3,23 +3,28 @@
 - [Samples_POINT](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/Samples_POINT) - contains the name of fastq files used to process all samples at once
 # Folder structure
 	mkdir FastQ QC MultiQC Trimmed Aligned Replicates
-	mkdir QC/FastQC QC/TrimmedQC QC/Aligned
+	mkdir QC/FastQC QC/TrimmedQC
 	mkdir Aligned/ReadCounts Replicates/Merged_ReadCounts/ Replicates/Merged-BAMs 
 	mkdir Replicates/Stranded_BAMs/ Replicates/Stranded_bedGraphs/ Replicates/Normalised_bedGraphs Replicates/Stranded_bigWigs/
 
 # 1. Quality check
      fastqc Fastq/*.fq.gz -o QC/FastQC/
-
+	 multiqc QC/FastQC/* -o MultiQC/ -n Raw_multiqc
+	 
 # 2. Adapter and low-quality reads removal
 [1.POINT-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/1.POINT-Seq_processing.py)
+# Move files to the respective folders
 	mv Trimmed/*.zip QC/TrimmedQC/
 	mv Trimmed/*.html QC/TrimmedQC/
 	mv Trimmed/*.txt QC/TrimmedQC/
-
+	multiqc QC/TrimmedQC/* -o MultiQC/ -n Trimmed_multiqc
+	
 # 3. Alignment
 - STAR aligner, human genome (38)
 - Allowing for one alignment to the reference; generation of readCounts
 - [1.POINT-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/1.POINT-Seq_processing.py)
+
+	multiqc Aligned/*.Logfinal.out -o MultiQC -n Aligned_multiqc
 
 # 4. Merge replicates 
 - [2.Merge_BAMs-Replicates.sh](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/2.Merge_BAMs-Replicates.sh)
@@ -27,11 +32,11 @@
 # 5. Generate strand-specific BAMs 
 - NEBNext Ultra II Directional RNA libraries are reverse-stranded [UTP/fr-firststrand])
 - Reads originating from transcripts on the forward (+) genomic strand are represented by SAM flags:
-- - f 83: R1 mapped to the reverse strand and - f 163: R2 mapped to the forward strand (-f => includes, -F => excludes)
+- R1 mapped to the reverse strand: -f 83 and R2 mapped to the forward strand: -f 163  (-f => includes, -F => excludes)
 - Reads originating from transcripts on the reverse (-) genomic strand are represented by SAM flags:
-- - f 99: R1 mapped to the forward strand and - f 147 : R2 mapped to the reverse strand (-f => includes, -F => excludes)
+- R1 mapped to the forward strand: -f 99 and R2 mapped to the reverse strand: -f 147 (-f => includes, -F => excludes)
 - [3.Strand-Specific_BAMs.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/3.BAM_Reads-split.py)
-- Remove intermediate BAM files
+# Remove intermediate BAM files
 	rm Replicates/Merged_BAMs/Stranded_BAMs/*1.bam
 	rm Replicates/Merged_BAMs/Stranded_BAMs/*2.bam
 
