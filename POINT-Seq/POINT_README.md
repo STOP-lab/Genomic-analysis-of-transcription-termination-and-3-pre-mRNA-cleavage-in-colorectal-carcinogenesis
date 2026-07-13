@@ -56,7 +56,7 @@
 	paste ReadCounts/SW620_DMSO_rep3-STARReadsPerGene.out.tab ReadCounts/SW620_DMSO_rep4-STARReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/SW620_DMSO-STARReadsPerGene.out.tab
 	paste ReadCounts/SW620_JTE_rep3-STARReadsPerGene.out.tab ReadCounts/SW620_JTE_rep4-STARReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/SW620_JTE-STARReadsPerGene.out.tab
 
-# 7. Strand-specific bigwigs generation
+# 7. Generate Strand-specific bigWigs
 	for f in Replicates/Normalised_bedGraphs/*.bedgraph; do sort -k1,1 -k2,2n "$f" -o "$f"; done
 	for f in Replicates/Normalised_bedGraphs/*.bedgraph; do /home/micgdu/kentutils/bedGraphToBigWig "$f" /dysk2/groupFolders/deepshika/GenomicData/hg38_chromsizes.genome "Replicates/Stranded_bigWigs/$(basename "$f" _norm.bedgraph).bw"; done
  
