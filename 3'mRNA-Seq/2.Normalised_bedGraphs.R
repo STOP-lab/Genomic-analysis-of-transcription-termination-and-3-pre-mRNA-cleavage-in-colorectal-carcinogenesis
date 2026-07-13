@@ -4,11 +4,11 @@ library(gtools)
 library(rtracklayer)
 library(GenomicFeatures)
 
-where<-"3Prime-Seq/ReadCounts/"
+where<-"ReadCounts/"
 setwd(where)
 
 # Sample table for DEseq2 analysis
-SampleInfo<-read.table("3Prime-Seq/SamplesInfo.txt", header=FALSE, stringsAsFactors=FALSE)
+SampleInfo<-read.table("SamplesInfo.txt", header=FALSE, stringsAsFactors=FALSE)
 sampleFiles <- grep("ReadsPerGene.out.tab",list.files(where),value=TRUE)
 
 # Sort the order of files
@@ -20,9 +20,7 @@ countData = data.frame(fread(sampleFiles[1]))[c(1,4)]
 
 # Loop and read the 4th column of remaining 11 *ReadsPerGene.out.tab files
 
-for(i in 2:12) {
-        countData = cbind(countData, data.frame(fread(sampleFiles[i]))[4])
-}
+for(i in 2:12) {countData = cbind(countData, data.frame(fread(sampleFiles[i]))[4])}
 
 sampleNames<-c("geneID",SampleInfo[,2])
 colnames(countData) = sampleNames
@@ -61,10 +59,10 @@ sampleStats<-rbind(colSums(sampleStats),sampleStats,featuredNorm, SF, SF_rpm)
 rownames(sampleStats)<- c("all_reads", "N_unmapped","N_multimapping","N_noFeature","N_ambiguous","exons","exonsNorm", "SF", "SF_rpm")
 sampleStats<-t(sampleStats)
 
-write.table(sampleStats, file="3Prime-Seq/ReadCounts/Stats_3prime_ColoRectal.txt",quote=FALSE,sep="\t",row.names=TRUE, col.names=TRUE)
+write.table(sampleStats, file="ReadCounts/Stats_3prime_ColoRectal.txt",quote=FALSE,sep="\t",row.names=TRUE, col.names=TRUE)
 
 # Normalise Stranded_bedgraphs
-where<-"3Prime-Seq/Aligned/Stranded_bedGraphs/"
+where<-"Aligned/Stranded_bedGraphs/"
 setwd(where)
 sampleFiles <- grep(".bedgraph.gz",list.files(where),value=TRUE)
 sampleFiles <- mixedsort(sampleFiles)
@@ -74,20 +72,22 @@ strand<- rep(a<-c("Fwd","Rev"), times=12)
 SampleFactor<-rep(SF_rpm, each = 2)
 sampleTable <- data.frame(fileName = sampleFiles, name=sampleNames, SampleFactor, strand)
 
-#bedtoolsBdgNorm - a funtion that normalises stranded bedGraphs using DESeq2 size factors (SF) and adjusts all SF by the mean rpm of exon reads for batch consistency to facilitate visual comparison between sample batches across experiments 
+#bedtoolsBdgNorm - a function that normalises stranded bedGraphs using DESeq2 size factors (SF) and adjusts all SF by the mean rpm of exon reads for batch consistency to facilitate visual comparison between sample batches across experiments 
+chr<-c(paste("chr",1:22,sep=""),"chrX", "chrY", "chrM") # limits the output to standard chromosomes
 
 bedtoolsBdgNorm<-function(x){  
-  f<-sampleTable$SampleFactor[x]
-  a<-read.table(sampleTable[x,1], header=FALSE, stringsAsFactors=FALSE)
-  a[,2]<-format(a[,2], scientific=FALSE)
-  a[,3]<-format(a[,3], scientific=FALSE)
-  if (sampleTable$strand[x]=="Fwd") {
-  a[,4]<-format(a[,4]/f,scientific=FALSE)} else { 
-  a[,4]<-format(-a[,4]/f, scientific=FALSE)}
-  a<-a[which(a[,1]%in% chr),]
-  write.table(a ,file=paste(sampleTable$name[x], "_norm_",sampleTable$strand[x],".bedGraph", sep=""),quote=FALSE,sep="\t",row.names=FALSE, col.names=FALSE)
+  Path <- "Aligned/Normalised_bedGraphs/" 
+  f <- sampleTable$SampleFactor[x]
+  a <- read.table(sampleTable[x, 1], header = FALSE, stringsAsFactors = FALSE)
+  a[, 2] <- as.integer(a[, 2]) 
+  a[, 3] <- as.integer(a[, 3])
+  if (sampleTable$strand[x] == "Fwd") {
+   a[, 4] <- a[, 4] / f} else { 
+   a[, 4] <- -a[, 4] / f}
+  # Round to desired decimals
+  a[, 4] <- round(a[, 4], digits = 6)   
+  a <- a[which(a[, 1] %in% chr), ]
+  write.table(a, file = file.path(Path, paste(sampleTable$name[x],"_", sampleTable$strand[x],"-norm.bedgraph", sep = "")), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
 } 
-
-chr<-c(paste("chr",1:22,sep=""),"chrX", "chrY", "chrM") # limits the output to standard chromosomes
 
 for (i in 1:dim(sampleTable)[1]) bedtoolsBdgNorm(i)
