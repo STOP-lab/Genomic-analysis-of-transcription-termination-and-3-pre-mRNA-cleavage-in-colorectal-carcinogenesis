@@ -1,5 +1,5 @@
-# Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis
-This repository contains the scripts used for the genomic analyses in the paper 'Uncoupling of transcription termination and 3’ pre-mRNA cleavage and polyadenylation during colorectal cancer progression'
+# Genomic-analysis-of-nascent-transcription-,-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis
+This repository contains the scripts used for the genomic analyses in the paper 'Proximity of pre-mRNA 3′ end processing and transcription termination is associated with enhanced gene expression'
 # Required Tools
   - FastQC (https://github.com/s-andrews/FastQC)
   - TrimGalore (https://github.com/FelixKrueger/TrimGalore)
@@ -19,3 +19,4 @@ This repository contains the scripts used for the genomic analyses in the paper 
   - ChIP-Seq ([ChIP_README.md](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/ChIP-Seq/ChIP_README.md))
   - mNET-Seq ([mNET_README.md](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/mNET_README.md))
   - 3'mRNA-Seq ([3'mRNA_README.md](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/3'mRNA_README.md))
+  - POINT-Seq
