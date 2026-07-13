@@ -71,11 +71,15 @@ for f in Replicates/Merged_BAMs/Stranded_BAMs/*.bam; do samtools index -@ 18 -b 
 - Generates normalised bedgraphs for single nucleotide resolution reads
 - [6.SNR-Normalised_bedGraphs.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/6.SNR-Normalised_bedGraphs.R)
 - For Pancreatic cells [6.SNR-Normalised_bedGraphs_Pancreatic.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/6.SNR-Normalised_bedGraphs_Pancreatic.R)
+
+# 9. Generate strand-specific bigWigs
+	for f in Replicates/SNR/Normalised_bedGraphs/*.bedgraph; do sort -k1,1 -k2,2n "$f" -o "$f"; done;
+	for f in Replicates/SNR/Normalised_bedGraphs/*.bedgraph; do /home/micgdu/kentutils/bedGraphToBigWig "$f" hg38_chromsizes.genome "Replicates/SNR/Stranded_bigWigs/$(basename "$f" _norm.bedgraph).bw"; done
   
-# 9. Termination Windows
+# 10. Termination Windows
 - MACS2 bdgbroadcall function was called upon T4ph stranded bedgraphs with default paprameters
 - Reverse strand bedgraph files were multiplied by -1 as they contain negative scores, and that might interfere with identifying the significantly enriched T4ph regions
 - [7.Termination_Windows.sh](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/7.Termination_Windows.sh)
   
-# 10. Metaplots
+# 11. Metaplots
 - computeMatrix was used in combination with plotProfile as per instructions from the [deepTools](https://github.com/deeptools/deepTools)
