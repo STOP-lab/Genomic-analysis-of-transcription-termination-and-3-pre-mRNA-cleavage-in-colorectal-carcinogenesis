@@ -11,11 +11,11 @@
      fastqc Fastq/*.fq.gz -o QC/FastQC/
 
 # 2. Adapter and low-quality reads removal
-- [1.POINT-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/1.POINT-Seq_processing.py)
-  
 	mv Trimmed/*.zip QC/TrimmedQC/
 	mv Trimmed/*.html QC/TrimmedQC/
 	mv Trimmed/*.txt QC/TrimmedQC/
+
+- [1.POINT-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/1.POINT-Seq_processing.py)
 
 # 3. Alignment
 - STAR aligner, human genome (38)
