@@ -4,16 +4,16 @@ library(GenomicAlignments)
 library(rtracklayer)
 library(BSgenome.Hsapiens.UCSC.hg38)
 
-Fwd_apa<-read.table("3Prime-Seq/IPF/polyAsites/PAS/APA_Resources/PAS_local_max2_Fwd.bed", header=FALSE, stringsAsFactors=FALSE)
-Rev_apa<-read.table("3Prime-Seq/IPF/polyAsites/PAS/APA_Resources/PAS_local_max2_Rev.bed", header=FALSE, stringsAsFactors=FALSE)
+Fwd_apa<-read.table("IPF/APA_Resources/PAS_local_max2_Fwd.bed", header=FALSE, stringsAsFactors=FALSE)
+Rev_apa<-read.table("IPF/APA_Resources/PAS_local_max2_Rev.bed", header=FALSE, stringsAsFactors=FALSE)
 
 Fwd_apaG<-GRanges(Fwd_apa[,1],IRanges(Fwd_apa[,2], Fwd_apa[,3]))
 Rev_apaG<-GRanges(Rev_apa[,1],IRanges(Rev_apa[,2], Rev_apa[,3]))
 
-setwd("3Prime-Seq/IPF/polyAsites/PAS/Raw_PAS/")
+setwd("IPF/Raw_PAS/")
 
-FwdPAgr<-list.files(pattern="bam_raw_PAS_Fwd.RData")  ## lists only PAs, not control files
-RevPAgr<-list.files(pattern="bam_raw_PAS_Rev.RData")
+FwdPAgr<-list.files(pattern=".*_R[1-4]+_raw_PAS_Fwd\\.RData")  ## lists only PAs, not control files
+RevPAgr<-list.files(pattern=".*_R[1-4]+_raw_PAS_Rev\\.RData")
 
 ApaQuant <- function(i) {
     # Print the current index and file paths for debugging
@@ -57,23 +57,29 @@ ApaQuant <- function(i) {
     binsBdgR <- binnedAverage(Rev_apaG, covR[1:24], "sum")
 
     # Save the binned average results
-    save(binsBdgF, file=paste("/dysk2/groupFolders/deepshika/ColoRectal_Cancer/3Prime-Seq/IPF/polyAsites/PAS/PA_counts/", FwdPAgr[i], "_FwdApa.RData", sep=""))
-    save(binsBdgR, file=paste("/dysk2/groupFolders/deepshika/ColoRectal_Cancer/3Prime-Seq/IPF/polyAsites/PAS/PA_counts/", RevPAgr[i], "_RevApa.RData", sep=""))
+    Foutname <- sub("_raw_PAS_Fwd.RData", "", FwdPAgr[i])  # remove .RData
+    Routname <- sub("_raw_PAS_Rev.RData", "", RevPAgr[i]) # remove .RData
+    
+    save(binsBdgF, file=paste("IPF/PAS_counts/", FwdPAgr[i], "_FwdApa_Counts.RData", sep=""))
+    save(binsBdgR, file=paste("IPF/PAS_counts/", RevPAgr[i], "_RevApa_Counts.RData", sep=""))
 
+    # Avoid scientific notation globally
+    options(scipen=999)
+    
     # Convert results to data frames and adjust start/end positions
     binsBdgFdf <- as.data.frame(binsBdgF)
-    binsBdgFdf[,2] <- format(binsBdgFdf[,2] + 14, scientific=FALSE)
-    binsBdgFdf[,3] <- format(binsBdgFdf[,3] - 14, scientific=FALSE)
+    binsBdgFdf[,2] <- binsBdgFdf[,2] + 14   # keep numeric
+    binsBdgFdf[,3] <- binsBdgFdf[,3] - 14   # keep numeric
     binsBdgFdf[,7] <- binsBdgFdf[,6] / (length(F) / 1e6) # Normalize to RPM
-
+    
     binsBdgRdf <- as.data.frame(binsBdgR)
-    binsBdgRdf[,2] <- format(binsBdgRdf[,2] + 14, scientific=FALSE)
-    binsBdgRdf[,3] <- format(binsBdgRdf[,3] - 14, scientific=FALSE)
+    binsBdgRdf[,2] <- binsBdgRdf[,2] + 14   # keep numeric
+    binsBdgRdf[,3] <- binsBdgRdf[,3] - 14   # keep numeric
     binsBdgRdf[,7] <- -binsBdgRdf[,6] / (length(R) / 1e6) # Normalize to RPM and negate
 
     # Write results to bedGraph files
-    write.table(binsBdgFdf[,c(1:3,7)], file=paste("3Prime-Seq/IPF/polyAsites/PAS/PA_counts/", FwdPAgr[i], "_FwdApaCounts_rpmC.bedGraph", sep=""), quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
-    write.table(binsBdgRdf[,c(1:3,7)], file=paste("3Prime-Seq/IPF/polyAsites/PAS/PA_counts/", RevPAgr[i], "_RevApaCounts_rpmC.bedGraph", sep=""), quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
+    write.table(binsBdgFdf[,c(1:3,7)], file=paste("IPF/PAS_counts/", FwdPAgr[i], "_FwdApaCounts_rpmC.bedGraph", sep=""), quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
+    write.table(binsBdgRdf[,c(1:3,7)], file=paste("IPF/PAS_counts/", RevPAgr[i], "_RevApaCounts_rpmC.bedGraph", sep=""), quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
 }
 
 # Run the function for each index within the valid range
