@@ -1,3 +1,4 @@
+### Colorectal fastq filenames before merging replicates (To be used for 1.mNET-Seq_processing.py)
 1CT-T4ph_rep1
 1CT-T4ph_rep2
 HCT116-T4ph_rep1
@@ -17,3 +18,19 @@ SW480-Total_rep2
 SW620-Total_rep1
 SW620-Total_rep2
 SW620-Total_rep3
+
+### Colorectal fastq filenames after merging replicates (To be used for 3. BAM_Reads-split.py)
+1CT-T4ph
+HCT116-T4ph
+SW480-T4ph
+SW620-T4ph
+1CT-Total
+HCT116-Total
+SW480-Total
+SW620-Total
+
+### Pancreatic T4ph fastq filenames before merging replicates (To be used for 1.mNET-Seq_processing.py)
+Panc1-T4ph_rep1
+Panc1-T4ph_rep2
+MIAPaCa2-T4ph_rep1
+MIAPaCa2-T4ph_rep2
