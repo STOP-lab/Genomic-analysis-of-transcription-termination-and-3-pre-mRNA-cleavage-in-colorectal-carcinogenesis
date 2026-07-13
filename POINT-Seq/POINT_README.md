@@ -1,4 +1,4 @@
-# POINT-seq (Polymerase intact nascent transcript sequencing) Analysis
+# POINT-seq (Polymerase-intact nascent transcript sequencing) Analysis
 - POINT-Seq has been performed on Colorectal cells.
 - Please refer to the scripts in [POINT-Seq](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/) for complete analysis
 - [Samples_POINT](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/Samples_POINT) - contains the names of the fastq files used to process all samples at once
@@ -58,7 +58,7 @@
 
 # 7. Generate Strand-specific bigWigs
 	for f in Replicates/Normalised_bedGraphs/*.bedgraph; do sort -k1,1 -k2,2n "$f" -o "$f"; done
-	for f in Replicates/Normalised_bedGraphs/*.bedgraph; do /home/micgdu/kentutils/bedGraphToBigWig "$f" /dysk2/groupFolders/deepshika/GenomicData/hg38_chromsizes.genome "Replicates/Stranded_bigWigs/$(basename "$f" _norm.bedgraph).bw"; done
+	for f in Replicates/Normalised_bedGraphs/*.bedgraph; do /home/micgdu/kentutils/bedGraphToBigWig "$f" hg38_chromsizes.genome "Replicates/Stranded_bigWigs/$(basename "$f" _norm.bedgraph).bw"; done
  
 # 8. Metaplots
 - computeMatrix was used in combination with plotProfile as per instructions from the [deepTools](https://github.com/deeptools/deepTools)
