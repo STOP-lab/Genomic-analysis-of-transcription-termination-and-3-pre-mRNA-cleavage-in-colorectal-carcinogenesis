@@ -4,16 +4,16 @@ library(GenomicAlignments)
 library(rtracklayer)
 library(BSgenome.Hsapiens.UCSC.hg38)
 
-setwd <- ("3Prime-Seq/Aligned/Stranded_BAMs/")
+setwd <- ("Aligned/Stranded_BAMs/")
 
-### Load internal primming mask: >= 6 consectutive As/Ts, >6 A/Ts in 10 nt window with exceptions of 3' gene ends (GENCODE) and experimentally detected APAs (Dirty et al. 2012)
+### Load internal primming mask: >= 6 consecutive As/Ts, >6 A/Ts in 10 nt window with exceptions of 3' gene ends (GENCODE) and experimentally detected APAs (Dirty et al. 2012)
 
-load("3Prime-Seq/IPF/A_mask4.RData")
-load("3Prime-Seq/IPF/T_mask4.RData")
+load("IPF/A_mask4.RData")
+load("IPF/T_mask4.RData")
 
-# listing stranded Fwd/Rev bam files with alignments
-Fwd<-list.files(path="3Prime-Seq/Aligned/Stranded_BAMs/", pattern="Fwd", full.names = FALSE)  
-Rev<-list.files(path="3Prime-Seq/Aligned/Stranded_BAMs/", pattern="Rev", full.names = FALSE)
+# listing stranded Fwd/Rev BAM files with alignments
+Fwd<-list.files(path="3Prime-Seq/Aligned/Stranded_BAMs/", pattern="Fwd.*\\.bam$", full.names = FALSE)  
+Rev<-list.files(path="3Prime-Seq/Aligned/Stranded_BAMs/", pattern="Rev.*\\.bam$", full.names = FALSE)
 
 # terminator function:
 # - Extends 3'ends that represent PAs by 10 ntds
@@ -51,7 +51,6 @@ terminator<- function(i){
 		Rhits<-unique(queryHits(olapsR))
 
 		### towards bw
-
 		Findex<-1:length(Fg)
 		FcleanIndex<-setdiff(Findex, Fhits)
 
@@ -65,7 +64,7 @@ terminator<- function(i){
 		R_int<-Rg1[Rhits]
 
 		Fcs<-length(FcleanIndex)/1e6
-		Rcs<-length(FcleanIndex)/1e6
+		Rcs<-length(RcleanIndex)/1e6
 
 		Fics<-length(F_int)/1e6
 		Rics<-length(R_int)/1e6
@@ -78,36 +77,45 @@ terminator<- function(i){
 }
 
 PAs_catcher_Fwd<-function(gr, name,f){
-		Path<- getwd()
+		Path<- "IPF/"
 		grr<-gr
 		start(grr)<-end(gr)-1
-		save(grr, file=paste(Path,"/PAS/",name, "_raw_PAS_Fwd.RData", sep=""))
+		#Rename the output
+    	name_clean <- sub("_Fwd\\.bam$", "", name)
+		save(grr, file=paste(Path,"/Raw_PAS/",name_clean, "_raw_PAS_Fwd.RData", sep=""))
 		covG<-GRanges(coverage(grr),seqinfo=seqinfo(Hsapiens))
-		save(covG, file=paste(Path,"/PAS/", name, "_raw_PAS_coverage_Fwd.RData", sep=""))
+		save(covG, file=paste(Path,"/Raw_PAS_Coverage/", name, "_raw_PAS_coverage_Fwd.RData", sep=""))	
 		end(covG)<-end(covG)+1
 		covG<-trim(covG)
 		a<-as.data.frame(covG)
 		a<-a[,c(1:3,6)]
-		a[,2]<-format(a[,2], scientific=FALSE)
-		a[,3]<-format(a[,3], scientific=FALSE)
-		a[,4]<-format(a[,4]/f, scientific=FALSE)
-		write.table(a ,file=paste(Path,"/PAS/", name, "_rpm_PAS_coverage_Fwd.bedGraph", sep=""),quote=FALSE,sep="\t",row.names=FALSE, col.names=FALSE)
+    	a[, 2] <- as.integer(a[, 2]) 
+    	a[, 3] <- as.integer(a[, 3])
+		a[, 4] <- a[, 4] / f
+    	# Round to desired decimals
+    	a[, 4] <- round(a[, 4], digits = 6)
+		write.table(a ,file=paste(Path,"/Raw_PAS_Coverage/bedGraphs/", name_clean, "_rpm_PAS_coverage_Fwd.bedGraph", sep=""),quote=FALSE,sep="\t",row.names=FALSE, col.names=FALSE)
 }
 
 PAs_catcher_Rev<-function(gr, name,f){
 		Path<- getwd()
 		grr<-gr
 		end(grr)<-start(gr)+1
-		save(grr, file=paste(Path,"/PAS/",name, "_raw_PAS_Rev.RData", sep=""))
+		#Rename the output
+    	name_clean <- sub("_Rev\\.bam$", "", name)
+		save(grr, file=paste(Path,"/Raw_PAS/",name_clean, "_raw_PAS_Rev.RData", sep=""))
 		covG<-GRanges(coverage(grr),seqinfo=seqinfo(Hsapiens))
-		save(covG, file=paste(Path,"/PAS/", name, "_raw_PAS_coverage_Rev.RData", sep=""))
+		save(covG, file=paste(Path,"/Raw_PAS_Coverage/", name_clean, "_raw_PAS_coverage_Rev.RData", sep=""))
 		end(covG)<-end(covG)+1
 		covG<-trim(covG)
 		a<-as.data.frame(covG)
 		a<-a[,c(1:3,6)]
-		a[,2]<-format(a[,2], scientific=FALSE)
-		a[,3]<-format(a[,3], scientific=FALSE) ## 1 addef for proper display in UCSC
-		a[,4]<-format(-a[,4]/f, scientific=FALSE)
-		write.table(a ,file=paste(Path,"/PAS/", name, "_rpm_PAS_coverage_Rev.bedGraph", sep=""),quote=FALSE,sep="\t",row.names=FALSE, col.names=FALSE)
+    	a[, 2] <- as.integer(a[, 2]) 
+    	a[, 3] <- as.integer(a[, 3])
+		a[, 4] <- -a[, 4] / f
+   		# Round to desired decimals
+    	a[, 4] <- round(a[, 4], digits = 6)
+		write.table(a ,file=paste(Path,"/Raw_PAS_Coverage/bedGraphs/", name_clean, "_rpm_PAS_coverage_Rev.bedGraph", sep=""),quote=FALSE,sep="\t",row.names=FALSE, col.names=FALSE)
 }
+	
 for (i in 1:length(Fwd)) terminator(i)
