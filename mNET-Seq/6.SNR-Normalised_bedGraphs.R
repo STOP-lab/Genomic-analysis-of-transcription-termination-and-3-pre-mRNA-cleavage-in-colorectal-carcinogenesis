@@ -1,12 +1,12 @@
 library(DESeq2)
 
-setwd("ColoRectal_Cancer/mNET-Seq/Replicates/Merged_ReadCounts/")
+setwd("Replicates/Merged_ReadCounts/")
 gdzie<-getwd()
 
 ## Load the readcount files
 sampleFiles <- grep("RM-STARReadsPerGene.out.tab",list.files(gdzie),value=TRUE)
 
-## Provide the names, condition, replicate number and order of the files to create sampleTable
+## Provide the names, condition, replicate number, and order of the files to create sampleTable
 sampleNames<-c( "HCEC_1CT-T4ph", "HCEC_1CT-Total", "HCT116-T4ph", "HCT116-Total","SW480-T4ph", "SW480-Total", "SW620-T4ph", "SW620-Total")
 sampleCondition<-c("T4ph", "Total", "T4ph", "Total", "T4ph", "Total", "T4ph", "Total")
 replicate<-c(1,1,1,1,1,1,1,1)
@@ -42,11 +42,11 @@ chr<-c(paste("chr",1:22,sep=""),"chrX", "chrY", "chrM")
 
 ## bedtoolsBdgNorm is a function that normalise the genome coverage using the size-factor calculated above
 bedtoolsBdgNorm<-function(x){
-  Path <- "Replicates/Merged_BAMs/Normalised_bedGraphs/SNR/"
+  Path <- "Replicates/Merged_BAMs//SNR/Normalised_bedGraphs"
   f<-sampleTable2$SampleFactor[x]
   a<-read.table(sampleTable2[x,1], header=FALSE, stringsAsFactors=FALSE)
-  a[,2]<-format(a[,2], scientific=FALSE)
-  a[,3]<-format(a[,3], scientific=FALSE)
+  a[, 2] <- as.integer(a[, 2]) 
+  a[, 3] <- as.integer(a[, 3])
   if (sampleTable2$strand[x]=="Fwd") {
   a[, 4] <- a[, 4] / f} else { 
    a[, 4] <- -a[, 4] / f}
