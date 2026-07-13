@@ -6,7 +6,8 @@ for srr in open("Samples_POINT.txt"):
 ### Generating strand-specific BAMs (NEBNext Ultra II Directional RNA libraries are reverse-stranded [UTP/fr-firststrand])
 
 ### Forward transcript strand (+)
-# Reads originating from transcripts on the + genomic strand are represented by: -f => includes, -F => excludes; - f 83: R1 mapped to the reverse strand and - f 163 : R2 mapped to the forward strand
+# Reads originating from transcripts on the + genomic strand are represented by: 
+#- f 83: R1 mapped to the reverse strand and - f 163: R2 mapped to the forward strand
 
 ## Extracting properly paired R1 alignments mapped to the reverse strand
 	os.system("samtools view -bh -@ 18 -f 83 Aligned/"+sra+"_markdup.bam > Stranded_BAMs/"+sra+"_fwd1.bam")
@@ -19,7 +20,8 @@ for srr in open("Samples_POINT.txt"):
  	os.system("samtools index -@ 18 -b Stranded_BAMs/"+sra+"_fwd.bam")
  
 ### Reverse transcript strand (-)
-# Reads originating from transcripts on the - genomic strand are represented by: - f 99: R1 mapped to the forward strand and - f 147 : R2 mapped to the reverse strand (-f => includes, -F => excludes)
+# Reads originating from transcripts on the - genomic strand are represented by:
+#- f 99: R1 mapped to the forward strand and - f 147: R2 mapped to the reverse strand (-f => includes, -F => excludes)
 
 ## Extracting properly paired R1 alignments mapped to the forward strand
 	os.system("samtools view -bh -@ 18 -f 99 Aligned/"+sra+"_markdup.bam > Stranded_BAMs/"+sra+"_rev1.bam")
