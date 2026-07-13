@@ -42,15 +42,18 @@ chr<-c(paste("chr",1:22,sep=""),"chrX", "chrY", "chrM")
 
 ## bedtoolsBdgNorm is a function that normalise the genome coverage using the size-factor calculated above
 bedtoolsBdgNorm<-function(x){
+  Path <- "Replicates/Merged_BAMs/Normalised_bedGraphs/SNR/"
   f<-sampleTable2$SampleFactor[x]
   a<-read.table(sampleTable2[x,1], header=FALSE, stringsAsFactors=FALSE)
   a[,2]<-format(a[,2], scientific=FALSE)
   a[,3]<-format(a[,3], scientific=FALSE)
   if (sampleTable2$strand[x]=="Fwd") {
-  a[,4]<-format(a[,4]/f,scientific=FALSE)} else { 
-  a[,4]<-format(-a[,4]/f, scientific=FALSE)}
-  a<-a[which(a[,1]%in% chr),]
-  write.table(a ,file=paste(sampleTable2$name[x], "_norm.bedgraph", sep=""),quote=FALSE,sep="\t",row.names=FALSE, col.names=FALSE)
-} 
+  a[, 4] <- a[, 4] / f} else { 
+   a[, 4] <- -a[, 4] / f}
+  # Round to desired decimals
+  a[, 4] <- round(a[, 4], digits = 6)   
+  a <- a[which(a[, 1] %in% chr), ]
+  write.table(a, file = file.path(Path, paste(sampleTable2$name[x], "_norm.bedgraph", sep = "")), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+}
 
 for (i in 1:16) bedtoolsBdgNorm(i)
