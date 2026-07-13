@@ -1,12 +1,21 @@
-1CT_R1_S28
-1CT_R2_S29
-1CT_R3_S30
-HCT116_R1_S31
-HCT116_R2_S32
-HCT116_R3_S33
-SW480_R1_S34
-SW480_R2_S35
-SW480_R3_S36
-SW620_R2_S25
-SW620_R3_S26
-SW620_R4_S27
+##### Colorectal fastq filenames before merging replicates (To be used for 1.3Prime-Seq_processing.py)
+1CT_3mRNA_rep1
+1CT_3mRNA_rep2
+1CT_3mRNA_rep3
+HCT116_3mRNA_rep1
+HCT116_3mRNA_rep2
+HCT116_3mRNA_rep3
+SW480_3mRNA_rep1
+SW480_3mRNA_rep2
+SW480_3mRNA_rep3
+SW620_3mRNA_rep1
+SW620_3mRNA_rep2
+SW620_3mRNA_rep3
+
+##### Pancreatic fastq filenames before merging replicates (To be used for 1.3Prime-Seq_processing.py)
+Panc1_3mRNA_rep1
+Panc1_3mRNA_rep2
+Panc1_3mRNA_rep3
+MIAPaCa2_3mRNA_rep1
+MIAPaCa2_3mRNA_rep2
+MIAPaCa2_3mRNA_rep3
