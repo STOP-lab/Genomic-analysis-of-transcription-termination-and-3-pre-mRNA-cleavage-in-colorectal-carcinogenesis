@@ -1,6 +1,8 @@
 # POINT-seq (Polymerase intact nascent transcript sequencing) Analysis
-- POINT-Seq has been performed on Colorectal cells. Please refer to the script for all sample processing [1.POINT-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/1.POINT-Seq_processing.py)
-- [Samples_POINT](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/Samples_POINT) - contains the name of fastq files used to process all samples at once
+- POINT-Seq has been performed on Colorectal cells.
+- Please refer to the scripts in [POINT-Seq](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/) for complete analysis
+- [Samples_POINT](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/Samples_POINT) - contains the names of the fastq files used to process all samples at once
+
 # Folder structure
 	mkdir FastQ QC MultiQC Trimmed Aligned Replicates
 	mkdir QC/FastQC QC/TrimmedQC
@@ -24,7 +26,7 @@
 - Allowing for one alignment to the reference; generation of readCounts
 - [1.POINT-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/1.POINT-Seq_processing.py)
 
-	# Alignment stats
+# Alignment stats
 	multiqc Aligned/*.Logfinal.out -o MultiQC -n Aligned_multiqc
 
 # 4. Merge replicates 
