@@ -51,10 +51,10 @@
 - [4.Normalised_bedGraphs.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/POINT-Seq/4.Normalised_bedGraphs.R)
 
 # Merge the read counts of replicates before normalisation
-	paste ReadCounts/SW480_DMSO_rep3-STARReadsPerGene.out.tab ReadCounts/SW480_DMSO_rep4-STARReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/SW480_DMSO-STARReadsPerGene.out.tab
-	paste ReadCounts/SW480_JTE_rep3-STARReadsPerGene.out.tab ReadCounts/SW480_JTE_rep4-STARReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/SW480_JTE-STARReadsPerGene.out.tab
-	paste ReadCounts/SW620_DMSO_rep3-STARReadsPerGene.out.tab ReadCounts/SW620_DMSO_rep4-STARReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/SW620_DMSO-STARReadsPerGene.out.tab
-	paste ReadCounts/SW620_JTE_rep3-STARReadsPerGene.out.tab ReadCounts/SW620_JTE_rep4-STARReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/SW620_JTE-STARReadsPerGene.out.tab
+	paste ReadCounts/SW480_DMSO_rep1-STARReadsPerGene.out.tab ReadCounts/SW480_DMSO_rep2-STARReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/SW480_DMSO-STARReadsPerGene.out.tab
+	paste ReadCounts/SW480_JTE_rep1-STARReadsPerGene.out.tab ReadCounts/SW480_JTE_rep2-STARReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/SW480_JTE-STARReadsPerGene.out.tab
+	paste ReadCounts/SW620_DMSO_rep1-STARReadsPerGene.out.tab ReadCounts/SW620_DMSO_rep2-STARReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/SW620_DMSO-STARReadsPerGene.out.tab
+	paste ReadCounts/SW620_JTE_rep1-STARReadsPerGene.out.tab ReadCounts/SW620_JTE_rep2-STARReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/SW620_JTE-STARReadsPerGene.out.tab
 
 # 7. Generate Strand-specific bigWigs
 	for f in Replicates/Normalised_bedGraphs/*.bedgraph; do sort -k1,1 -k2,2n "$f" -o "$f"; done
