@@ -35,7 +35,7 @@ extractor <- function(i) {
 }
 
 Bam2bedgraph_Fwd <- function(gr, name) {
-    Path <- "Replicates/Stranded_bedGraphs/SNR/"
+    Path <- "Replicates/SNR/Stranded_bedGraphs/"
     grr <- gr
     start(grr) <- end(gr) - 1
     covG <- GRanges(coverage(grr), seqinfo = seqinfo(Hsapiens))
@@ -52,7 +52,7 @@ Bam2bedgraph_Fwd <- function(gr, name) {
 }
 
 Bam2bedgraph_Rev <- function(gr, name) {
-    Path <- "Replicates/Stranded_bedGraphs/SNR/"
+    Path <- "Replicates/SNR/Stranded_bedGraphs/"
     grr <- gr
     end(grr) <- start(gr) + 1
     covG <- GRanges(coverage(grr), seqinfo = seqinfo(Hsapiens))
