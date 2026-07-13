@@ -1,16 +1,16 @@
 library(DESeq2)
 
-setwd("/dysk2/groupFolders/deepshika/mNET-Seq/Pancreatic_Cells/Replicates/Merged_ReadCounts/")
+setwd("Replicates/Merged_ReadCounts/")
 gdzie<-getwd()
 
 sampleFiles <- grep("STAR-SEReadsPerGene.out.tab",list.files(gdzie),value=TRUE)
 sampleFiles
 
-sampleNames<-c("BxPC3-T4ph", "MiaPaCa2-T4ph", "Panc1-T4ph")
+sampleNames<-c("MiaPaCa2-T4ph", "Panc1-T4ph")
 
-sampleCondition<-c("WT", "Mutated", "Mutated")
-replicate<-c(1,1,1)
-order<-c(1,2,3)
+sampleCondition<-c("LowSensitivity", "LowSensitivity")
+replicate<-c(1,1,)
+order<-c(1,2)
 sampleTable <- data.frame(sampleName = sampleNames, fileName = sampleFiles, condition = factor(sampleCondition),replicate=factor(replicate), name=sampleNames)
 sampleTable
 
@@ -27,22 +27,18 @@ readCountsSumNorm<-readCountsSum/SF
 readCountsSumNorm
 
 ### Full read files processing
-#setwd("/dysk2/groupFolders/deepshika/mNET-Seq/Pancreatic_Cells/Replicates/Merged_BAMs/Stranded_bedGraphs/")
-setwd("/dysk2/groupFolders/deepshika/mNET-Seq/Pancreatic_Cells/Replicates/Merged_BAMs/Stranded_bedGraphs/Markdup/")
+setwd("Replicates/Stranded_bedGraphs/")
 
 gdzie<-getwd()
 sampleFiles2 <- grep(".bedgraph.gz",list.files(gdzie),value=TRUE)
 sampleFiles2
 
-#sampleNames2<-c("BxPC3-T4ph-dd-fwd", "BxPC3-T4ph-dd-rev", "MiaPaCa2-T4ph-dd-fwd", "MiaPaCa2-T4ph-dd-rev", "Panc1-T4ph-dd-fwd", "Panc1-T4ph-dd-rev")
-sampleNames2<-c("BxPC3-T4ph-fwd", "BxPC3-T4ph-rev", "MiaPaCa2-T4ph-fwd", "MiaPaCa2-T4ph-rev", "Panc1-T4ph-fwd", "Panc1-T4ph-rev")
+sampleNames2<-c("MiaPaCa2-T4ph-fwd", "MiaPaCa2-T4ph-rev", "Panc1-T4ph-fwd", "Panc1-T4ph-rev")
+sampleCondition2<-c("LowSensitivity", "LowSensitivity", "HighSensitivity", "HighSensitivity")
+replicate2<-c(1,1,1,1)
+order2 <-c(1,2,3,4,)
 
-sampleCondition2<-c("WT", "WT", "Mutated", "Mutated", "Mutated", "Mutated")
-
-replicate2<-c(1,1,1,1,1,1)
-order2 <-c(1,2,3,4,5,6)
-
-strand <-c("Fwd","Rev","Fwd","Rev","Fwd","Rev")
+strand <-c("Fwd","Rev","Fwd","Rev")
 
 SampleFactor<-rep(readCountsSumNorm, each = 2)
 SampleFactor
@@ -53,8 +49,8 @@ sampleTable2
 chr<-c(paste("chr",1:22,sep=""),"chrX", "chrY", "chrM")
 
 bedtoolsBdgNorm<-function(x){
-#  Path <- "/dysk2/groupFolders/deepshika/mNET-Seq/Pancreatic_Cells/Replicates/Merged_BAMs/Normalised_bedGraphs/"
-  Path <- "/dysk2/groupFolders/deepshika/mNET-Seq/Pancreatic_Cells/Replicates/Merged_BAMs/Normalised_bedGraphs/Markdup/"  
+  Path <- "Replicates/Normalised_bedGraphs/"
+ 
   f <- sampleTable2$SampleFactor[x]
   a <- read.table(sampleTable2[x, 1], header = FALSE, stringsAsFactors = FALSE)
   a[, 2] <- as.integer(a[, 2]) 
