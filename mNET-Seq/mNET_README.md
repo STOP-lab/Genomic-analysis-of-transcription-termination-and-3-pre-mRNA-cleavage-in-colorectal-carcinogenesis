@@ -1,5 +1,5 @@
 # mNET-Seq (Mammalian Native elongating transcript sequencing) Analysis
-- mNET-Seq has been performed on Colorectal and Pancreatic cells.
+- mNET-Seq has been performed on Colorectal and Pancreatic cells. For Pancreatic cells, only read2 was considered for downstream analysis because read1 was of poor technical quality.
 - Please refer to the scripts in [mNET-Seq](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/) for complete analysis
 - [Samples_mNET](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/Samples_mNET) - contains the names of the fastq files used to process all samples at once
 # Folder structure
@@ -48,7 +48,7 @@
 	for f in Replicates/Merged_BAMs/*.bam; do base=$(basename "$f" .bam); samtools view -bh -@ 18 -F 20 "$f" > Replicates/Stranded_BAMs/"${base}_rev.bam"; done
 for f in Replicates/Merged_BAMs/Stranded_BAMs/*.bam; do samtools index -@ 18 -b "$f"; done;
 
-## Generating coverage files for pancreatic samples
+## Generate coverage files for pancreatic samples
 	for f in Replicates//Stranded_BAMs/*_fwd.bam; do f_base=$(basename "$f" .bam); bedtools genomecov -ibam  Replicates/Stranded_BAMs/"${f_base}.bam" -bga -split | gzip - > Replicates/Stranded_bedGraphs/"${f_base}.bedgraph.gz"; done
 	for f in Replicates/Stranded_BAMs/*_rev.bam; do f_base=$(basename "$f" .bam); bedtools genomecov -ibam  Replicates/Stranded_BAMs/"${f_base}.bam" -bga -split | gzip - > Replicates/Stranded_bedGraphs/"${f_base}.bedgraph.gz"; done
 
@@ -62,7 +62,7 @@ for f in Replicates/Merged_BAMs/Stranded_BAMs/*.bam; do samtools index -@ 18 -b 
 	paste Aligned/ReadCounts/MiaPaCa2-T4ph_rep1-STAR-SEReadsPerGene.out.tab Aligned/ReadCounts/MiaPaCa2-T4ph_rep2-STAR-SEReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/MiaPaCa2-T4ph-STAR-SEReadsPerGene.out.tab
 	paste Aligned/ReadCounts/Panc1-T4ph_rep1-STAR-SEReadsPerGene.out.tab Aligned/ReadCounts/Panc1-T4ph_rep2-STAR-SEReadsPerGene.out.tab | awk '{printf "%s", $1; for (c=2; c<=4; c++) {s=0; for(i=c;i<=NF;i+=4)s+=$i; printf "\t%s", s;} print ""}' > Replicates/Merged_ReadCounts/Panc1-T4ph-STAR-SEReadsPerGene.out.tab
 
-# 7. Extracting the single nucleotide resolution (SNR)
+# 7. Extract the single nucleotide resolution (SNR)
 - Extracts the last transcribed nucleotide from a read, that is, the last position of the read
 - [5.SNR.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/mNET-Seq/5.SNR.R)
 
