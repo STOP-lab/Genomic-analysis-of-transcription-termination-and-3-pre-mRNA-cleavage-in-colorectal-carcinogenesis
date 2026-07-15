@@ -20,72 +20,57 @@ fastqc FastQ/*.gz -o QC/FastQC/
 ```
 - Raw FASTQ Stats
 ```
-Multiqc QC/FastQC -o MultiQC -n RawFastQ_multiqc
+Multiqc QC/FastQC -o MultiQC -n Raw_multiqc
 ```
 # 3. Adapter, low-quality reads, and PolyA/T_tails removal
  - [1.3Prime-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/1.3Prime-Seq_processing.py)
- - Move the trimmed reports to the quality check reports to main the folder structure
+- Trimmed FASTQ Stats
 ```	
 mv Trimmed/*.zip QC/TrimmedQC/
 mv Trimmed/*.html QC/TrimmedQC/
 mv Trimmed/*.txt QC/TrimmedQC/
-mv Trimmed/*.zip QC/TrimmedQC/PolyA-T
-mv Trimmed/*.html QC/TrimmedQC/PolyA-T
-mv Trimmed/*.txt QC/TrimmedQC/PolyA-T
+
+Multiqc QC/TrimmedQC/ -o MultiQC -n Trimmed_multiqc
 ```
 # 4. Alignment 
  - STAR aligner, human genome (hg38)
  - Parameters for STAR alignment were adapted from lexogen (https://github.com/Lexogen-Tools/quantseqpool_analysis) along with the generation of read counts
  - [1.3Prime-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/1.3Prime-Seq_processing.py)
-# 5. Generate strand-specific BAMs and genome coverage files(bedGrahps)
+ - Alignment Stats
+```	
+Multiqc QC/Aligned/ -o MultiQC -n Aligned_multiqc
+```
+# 5. Generate strand-specific BAMs and genome coverage files(bedGraphs)
 - Forward Strand reads - 5' to 3' direction; use the flag -f 16
 - Reverse Strand reads - 3' to 5' direction; use the flag -F 16
   -f => includes, -F => excludes;  16 => reads mapping to reverse strand
 - [1.3Prime-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/1.3Prime-Seq_processing.py)
+  
 # 6. Normalisation of strand-specific reads
 - Estimates size factors in Deseq2 and normalisation factors (per million factors)
 - Generates normalised bedgraphs
 - [2.Normalised_bedGraphs.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/2.Normalised_bedGraphs.R)
-- Move Normalised bedgraphs to their folder
-```
-mv 3Prime-Seq/Aligned/Stranded_bedGraphs/*.bedGraph 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/
-mv 3Prime-Seq/Aligned/Stranded_bedGraphs/*.bedGraph 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/
-```
 - Sort normalised bedgraphs and generate bigWigs
 ```
-for f in 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/*.bedGraph; do sort -k1,1 -k2,2n "$f" -o "$f"; done
-for f in 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/*.bedGraph; do /home/micgdu/kentutils/bedGraphToBigWig "$f" hg38_chromsizes.genome "$f.bw"; done
-for f in 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/*.bw; do mv "$f" "$(echo "$f" | sed s/.bedGraph.bw/.bw/g)"; done
-mv 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/*.bw 3Prime-Seq/Aligned/Stranded_bigWigs/
+for f in Aligned/Normalised_bedGraphs/*.bedGraph; do sort -k1,1 -k2,2n "$f" -o "$f"; do
+for f in Aligned/Normalised_bedGraphs/*.bedGraph; do /home/micgdu/kentutils/bedGraphToBigWig "$f" hg38_chromsizes.genome "Aligned/Stranded_bigWigs/$(basename "$f" _norm.bedgraph).bw"; done
 ```
 # 7. Filtering Internal Priming Events
 - Uses two scripts [3.InternalPrimming_Mask.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/3.InternalPrimming_Mask.R); [4.InternalPrimming_Filtering.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/4.InternalPrimming_Filtering.R)
 - [3.InternalPrimming_Mask.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/3.InternalPrimming_Mask.R) : Generates the genomic mask that includes consecutive 6A's/T's and or >6A/T in a 10 nucleotide window excluding the gene 3'ends and validates experimental polyadenylation sites
-- [4.InternalPrimming_Filtering.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/4.InternalPrimming_Filtering.R) - Script used to filter out the internal priming reads from the strand-specific bams based on the crude genomic mask generated
+- [4.InternalPrimming_Filtering.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/4.InternalPrimming_Filtering.R) - Script used to filter out the internal priming reads from the strand-specific BAMs based on the crude genomic mask generated
 
-# 8. Polyadenylation site (PAS) Detection and Quantification
+# 8. Polyadenylation Site (PAS) Detection and Quantification
 - [5.PAS_Calling.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/5.PAS_Calling.R)
   Generate density profiles: Strand-specific, depth-normalized 3’ mRNA-seq coverage profiles were created for each strand across the genome
 - [6.PAS_Quantification.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/6.PAS_Quantification.R)
 - Identifying PAS: A sliding 30-nucleotide window summed signal values, selecting windows above a threshold (30)
                    The strongest peak within each window was identified, and overlapping regions were removed to refine PAS detection
                    The detected PAS were used to extract sample-specific polyadenylation sites
-  
-- Rename and relocate files after PAS Quantification
-```
-for f in IPF/polyAsites/PAS/PA_counts/*.bedGraph; do mv "$f" "$(echo "$f" | sed s/_Fwd.bam_raw_PAS_Fwd.RData_/_raw_PAS_/)"; done
-for f in IPF/polyAsites/PAS/PA_counts/*.bedGraph; do mv "$f" "$(echo "$f" | sed s/_Rev.bam_raw_PAS_Rev.RData_/_raw_PAS_/)"; done
-for f in IPF/polyAsites/PAS/PA_counts/*FwdApa.RData; do mv "$f" "$(echo "$f" | sed s/_Fwd.bam_raw_PAS_Fwd.RData_/_raw_PAS_/)"; done
-for f in IPF/polyAsites/PAS/PA_counts/*RevApa.RData; do mv "$f" "$(echo "$f" | sed s/_Rev.bam_raw_PAS_Rev.RData_/_raw_PAS_/)"; done
-
-mv IPF/polyAsites/PAS/PA_counts/*.bedGraph IPF/polyAsites/PAS/PA_counts/bedGraphs/
-```
 - Sort the bedgraphs and convert them to bigWigs
 ```
-for f in IPF/polyAsites/PAS/PA_counts/bedGraphs/*.bedGraph ; do sort -k1,1 -k2,2n "$f" -o "$f"; done
-for f in IPF/polyAsites/PAS/PA_counts/bedGraphs/* ; do /home/micgdu/kentutils/bedGraphToBigWig "$f" /dysk2/groupFolders/deepshika/GenomicData/hg38_chromsizes.genome "$f.bw" ; done
-mv IPF/polyAsites/PAS/PA_counts/bedGraphs/*.bw IPF/polyAsites/PAS/PA_counts/bigWigs/
-for f in IPF/polyAsites/PAS/PA_counts/bigWigs/*.bw; do mv "$f" "$(echo "$f" | sed s/.bedGraph//)"; done
+for f in IPF/PAS_counts/bedGraphs/*.bedGraph ; do sort -k1,1 -k2,2n "$f" -o "$f"; done
+for f in IPF/PAS_counts/bedGraphs/* ; do /home/micgdu/kentutils/bedGraphToBigWig "$f" hg38_chromsizes.genome "IPF/PAS_counts/bigWigs/$(basename "$f" _norm.bedgraph).bw" ; done
 ```
 # 9. Alternative PolyAdenylation (APA) analysis
 - [7.APA.R](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/7.APA.R)
