@@ -1,25 +1,26 @@
 # 3'mRNA-Seq Analysis
 - 3'mRNA-Seq has been performed on Colorectal cells. Please refer to the script for all sample processing [1.3Prime-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/1.3Prime-Seq_processing.py)
-- [Samples_3'mRNA](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/Samples_3'mRNA) - contains the name of fastq files used to process all samples at once
+- [Samples_3'mRNA](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/Samples_3'mRNA) - contains the names of the fastq files used to process all samples at once
 # Folder structure for analysis
 ```
-mkdir 3Prime-Seq/FastQ 3Prime-Seq/QC 3Prime-Seq/Trimmed 3Prime-Seq/Trimmed/PolyA-T/ 3Prime-Seq/Aligned mkdir 3Prime-Seq/Aligned/ReadCounts/
-mkdir 3Prime-Seq/QC/FastQC 3Prime-Seq/QC/TrimmedQC 3Prime-Seq/QC/TrimmedQC/PolyA-T 3Prime-Seq/QC/Aligned
-mkdir 3Prime-Seq/Replicates 3Prime-Seq/Aligned/Stranded_BAMs/ 3Prime-Seq/Aligned/Stranded_bedGraphs/
-mkdir 3Prime-Seq/Aligned/Stranded_bedGraphs/Normalised_bedGraphs/ 3Prime-Seq/Aligned/Stranded_bigWigs/
-mkdir 3Prime-Seq/IPF 3Prime-Seq/Aligned/IPF/PolyAsites 3Prime-Seq/IPF/PAS 3Prime-Seq/IPF/Raw_PAS
-mkdir 3Prime-Seq/IPF/PAs_counts 3Prime-Seq/APA-Analysis
-mkdir 
+mkdir FastQ QC Trimmed Aligned Aligned/ReadCounts/
+mkdir QC/FastQC QC/TrimmedQC QC/Aligned
+mkdir Replicates Aligned/Stranded_BAMs/ Aligned/Stranded_bedGraphs/ Aligned/Normalised_bedGraphs/ Aligned/Stranded_bigWigs/
+mkdir IPF IPF/PolyAsites IPF/PAS IPF/Raw_PAS IPF/PAS_counts APA-Analysis
 ```  
-# 1. DeMultiplexing and FastQ format conversion
-- Raw .cbcl files to fastq conversion and demultiplexing  was done using custom-created SampleSheet
+# 1. Demultiplexing and FastQ format conversion
+- Raw .cbcl files to fastq conversion and demultiplexing were done using a custom-created SampleSheet
 - --no-lane-splitting Make sure that the reads of one sample from different lanes don't produce multiple fastq files but would end up in one FastQ file
 ```  	
 bcl2fastq -R 231030_A01680_0155_AHMN5MDRX3/ -o 231030_A01680_0155_AHMN5MDRX3/3Prime-Seq/FastQ/ --no-lane-splitting -p 26
 ```
 # 2. Quality check
 ```
-fastqc 3Prime-Seq/FastQ/*.gz -o 3Prime-Seq/QC/FastQC/
+fastqc FastQ/*.gz -o QC/FastQC/
+```
+- Raw FASTQ Stats
+```
+Multiqc QC/FastQC -o MultiQC -n RawFastQ_multiqc
 ```
 # 3. Adapter, low-quality reads, and PolyA/T_tails removal
  - [1.3Prime-Seq_processing.py](https://github.com/STOP-lab/Genomic-analysis-of-transcription-termination-and-3-pre-mRNA-cleavage-in-colorectal-carcinogenesis/blob/main/3'mRNA-Seq/1.3Prime-Seq_processing.py)
